@@ -171,26 +171,7 @@
 \maketitle
 	
 \begin{abstract}
-	OLD ABSTRACT
-	
-	 \emph{(Pre)closure spaces} are a generalization of topological spaces covering also the notion of neighbourhood in discrete structures, widely used to model and reason about spatial aspects of distributed systems.
-	 
-	In this paper we introduce an abstract theoretical framework for the systematic investigation of the logical aspects of closure spaces.
-	%, and which have been successfully applied to various problems concerning reachability, vehicular movement, digital image analysis, etc.
-%	This is important and useful for various reasons.
-% unificare varie varianti
-% ottenere risultati da costruzioni generali
-% creare nuove logiche 
-	To this end we define the categorical notion of \emph{closure (hyper)doctrines}, i.e.~doctrines endowed with inflationary operators. % (and subject to suitable conditions).
-	The generality and effectiveness of this notion is demonstrated by many examples arising naturally from topological spaces, fuzzy sets, algebraic structures, coalgebras, and covering at once also known cases such as Kripke frames and probabilistic frames (i.e., Markov chains). 
-	\ifreport
-	In order to model also \emph{surroundedness}, closure hyperdoctrines are then endowed with \emph{paths}; this construction allows us to cover all the logical constructs of the \emph{Spatial Logic for Closure Spaces}. 
-	\fi	
-	By leveraging general categorical constructions, we provide a first axiomatisation and sound and complete semantics for propositional/regular/first order logics for closure operators.
-	
-	Therefore, closure hyperdoctrines are useful both for refining and improving the theory of existing spatial logics, but especially for the definition of new spatial logics for various applications.
-% for Closure Spaces, a modal logic for the specification and verification on spatial properties over preclosure spaces. 
-%Moreover, exploiting general results from categorical logic we introduce a new, higher order, version of SLCS, with a sound and complete semantics.
+	TO DO: vendere 'sta roba ma in breve
 \end{abstract}
 	
 	
@@ -218,7 +199,69 @@
 	by the PRIN 20228KXFN2 ``Spatio-Temporal Enhancement of Neural nets for Deeply Hierarchical Automatised Logic'' (STENDHAL),
 	funded by NextGenerationEU.
 \end{credits}
+\section{Introduction}
+TO DO: vendere 'sta roba
 
+\section{Closure algebras and closure spaces}
+We start by recalling some definitions.
+
+\begin{definition}
+A poset $(H, \leq)$ is a \emph{frame} if:
+\begin{enumerate}
+	\item it has finite meets;
+	\item it has arbitrary joins;
+	\item for every family $(y_i)_{i\in I}\subseteq H$ and $x \in H$ we have:
+	\[x\wedge \bigvee_{i\in I} y_i \leq \bigvee_{i\in I} x\wedge y_i\] 
+\end{enumerate}
+
+A morphism of frames $f\colon (H, \leq)\to (K, \leq)$ is a function $f\colon H\to K$ which preserves finite meets and arbitrary joins.
+\end{definition}
+
+\begin{proposition}\label{prop:facts}
+Let $(H, \leq)$ be a frame, then following facts are true:
+\begin{enumerate}
+\item $(H, \leq)$ is an \emph{Heyting algebra}, i.e.~ for every $x\in H$the function $-\wedge x$;
+\item 
+\end{enumerate}
+\end{proposition}
+
+\begin{remark}\label{rem:bool}
+
+\end{remark}
+
+\begin{example}\label{ex:top}
+	contenuto...
+\end{example}
+
+
+\begin{proposition}
+	contenuto...
+\end{proposition}
+
+\begin{theorem}
+	Johnstone
+\end{theorem}
+
+
+\subsection{Closure operators on frames}
+
+
+TO DO: operatori spaziali
+\section{Sheaves of closure algebras}
+
+TO DO: introdurre operatori temporali necessariamente, possibilmente, until, next per i discreti
+
+\section{A spatio-temporal logic for closure spaces}
+
+\subsection{The calculus STLCS}
+\subsubsection{Spatial logic for closure spaces}
+
+\subsubsection{Adding temporality}
+
+\subsection{Interpreting STLCS}
+
+\section{Conclusions}
+TO DO: vendere 'sta roba parte 2
 
 %
 %% Bibliography

@@ -75,7 +75,9 @@
 \newcommand{\ex}[1]{\mathscr{ex(#1)}}
 \newcommand{\inte}[1]{\llbracket{#1}\rrbracket}
 \newcommand{\sint}[1]{\catname{Syn}^{fo}(#1)}
-\newcommand{\homodd}[0]{\catname{HoMod}}
+\newcommand{\frm}[0]{\catname{Frm}}
+\newcommand{\topo}[0]{\catname{Top}}
+\newcommand{\set}[0]{\catname{Set}}
 \newcommand{\escape}[3]{#2 \mathfrak{E}_{#1} #3}
 \newcommand{\es}[3]{ \mathsf{isER}_{#1}(p,#2, #3)}
 \newcommand{\esca}[4]{ \mathsf{eRoute}_{#1} (#4, #2, #3)}
@@ -203,7 +205,7 @@
 TO DO: vendere 'sta roba
 
 \section{Closure algebras and closure spaces}
-We start by recalling some definitions.
+We start by recalling some definitions regarding frames and closure operators on them. Standard textbook references are \cite{borceux1994handbook3,dikranjan2013categorical,johnstone1982stone,maclane2012sheaves,vickers1989topology}. 
 
 \begin{definition}
 A poset $(H, \leq)$ is a \emph{frame} if:
@@ -214,20 +216,76 @@ A poset $(H, \leq)$ is a \emph{frame} if:
 	\[x\wedge \bigvee_{i\in I} y_i \leq \bigvee_{i\in I} x\wedge y_i\] 
 \end{enumerate}
 
-A morphism of frames $f\colon (H, \leq)\to (K, \leq)$ is a function $f\colon H\to K$ which preserves finite meets and arbitrary joins.
+A morphism of frames $f\colon (H, \leq)\to (K, \leq)$ is a function $f\colon H\to K$ which preserves finite meets and arbitrary joins. We will denote by $\frm$ the resulting category.
 \end{definition}
 
-\begin{proposition}\label{prop:facts}
-Let $(H, \leq)$ be a frame, then following facts are true:
+\begin{example}\label{ex:set}
+Given a set $X$, its power set $(\mathcal{P}(X), \subseteq)$ is a frame:  joins and meets are provided by unions and intersections which distribute on each other.
+\end{example}
+
+\begin{example}\label{ex:topo}
+Topologies generalize the previous example. Indeed, let $(X, \mathcal{O}_X)$ be a topological spaces. Then $(\mathcal{O}_X, \subseteq)$ has finite meets as $\emptyset\in \mathcal{O}_X$ and the intersection of two opens is open. Since the arbitrary union of open sets is open then $(\mathcal{O}_X, \subseteq)$ also has arbitrary joins. The distributivity of binary meets over joins follows from the fact that intersections distributes over unions.
+ \end{example}
+
+
+
+We can put \Cref{ex:topo,ex:set} in a broader context.
+\begin{proposition}\label{prop:fu}
+	Let $\topo$ be the category of topological spaces and continuous map. There is a functor $\mathcal{O}\colon \topo^{op}\to \frm$ sending a topological space $(X, \mathcal{O}_X)$ to its topology $(\mathcal{O}_X, \subseteq)$ and a continuous function $f\colon (X, \mathcal{O}_X)\to (Y, \mathcal{O}_Y)$ to
+	\begin{align*}
+	\mathcal{O}_{f}\colon (\mathcal{O }_Y, \subseteq)&\to (\mathcal{O}_X, \subseteq) \\ U &\mapsto f^{-1}(U)  
+	\end{align*} 
+\end{proposition}
+\begin{proof} By  \Cref{ex:topo} we only have to show that $\mathcal{O}_f$ is a morphism of frames, but this follows immediately from the fact that the preimage function $f^{-1}\colon \mathcal{P}(Y)\to \mathcal{P}(X)$ preserves arbitrary unions and intersections.
+\end{proof}
+
+Precomposing with the opposite of the discrete topology functor $\set \to \topo$ we obtain the following result.
+
+\begin{corollary}\label{cor:fu}
+	There exists a functor $\mathcal{P}\colon \set^{op}\to \frm$ sending a set $X$ to $(\mathcal{P}(X), \subseteq)$ and a function $f\colon X\to Y$ to $f^{-1}\colon (\mathcal{P}(Y), \subseteq) \to (\mathcal{P}(X), \subseteq)$.
+\end{corollary}
+
+\begin{remark}\label{rem:nomeet}
+Notice that the functors of \Cref{prop:fu,cor:fu} are both faithful but not full. Indeed the image of every arrow  
+\end{remark}
+
+
+
+Let us recall  Freyd 's  Adjoint Functor Theorem \cite{borceux1994handbook1,dikranjan2013categorical,freyd2003abelian,freyd1990categories,mac2013categories}in the case of posets.
+\begin{theorem}[Adjoint functor theorem for posets]\label{thm:radj} Let $(P, \leq)$ be a complete poset. If $f\colon (P,\leq)\to (Q, \leq)$ is a function which preserves arbitrary  . Then $f$ is a left adjoint.
+\end{theorem}
+\begin{proof}
+	contenuto...
+\end{proof}
+
+Dualizing \Cref{thm:radj} we get immediately the following.
+\begin{corollary}\label{cor:ladj}
+	contenuto...
+\end{corollary}
+
+\begin{corollary}\label{cor:facts}
+Let $(H, \leq)$ be a frame, the following facts are true:
 \begin{enumerate}
-\item $(H, \leq)$ is an \emph{Heyting algebra}, i.e.~ for every $x\in H$the function $-\wedge x$;
+\item $(H, \leq)$ is an \emph{Heyting algebra}, i.e.~for every $h\in H$ the function $-\wedge h$ has a right adjoint $h\Rightarrow -$;
 \item 
 \end{enumerate}
-\end{proposition}
+\end{corollary}
+\begin{proof}
+	\begin{enumerate}
+		\item 
+		\item 
+	\end{enumerate}
+\end{proof}
 
-\begin{remark}\label{rem:bool}
+\begin{definition}\label{rem:bool}
+booleane
+\end{definition}
 
-\end{remark}
+
+\begin{example}\label{ex:reg}
+	contenuto...
+\end{example}
+
 
 \begin{example}\label{ex:top}
 	contenuto...
@@ -238,9 +296,18 @@ Let $(H, \leq)$ be a frame, then following facts are true:
 	contenuto...
 \end{proposition}
 
+\begin{definition}
+	atomi
+\end{definition}
+
+In this paper we are particularly interested in locales arising as power sets. Luckily we have all the ingredients needed to fully characterize them.
+
 \begin{theorem}
 	Johnstone
 \end{theorem}
+\begin{proof}
+	contenuto...
+\end{proof}
 
 
 \subsection{Closure operators on frames}
@@ -267,7 +334,7 @@ TO DO: vendere 'sta roba parte 2
 %% Bibliography
 %
 \bibliographystyle{splncs04}
-\bibliography{biblio}
+\bibliography{bibliog}
 \end{document}
 
 

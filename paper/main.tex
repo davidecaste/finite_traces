@@ -239,45 +239,153 @@ We can put \Cref{ex:topo,ex:set} in a broader context.
 \begin{proof} By  \Cref{ex:topo} we only have to show that $\mathcal{O}_f$ is a morphism of frames, but this follows immediately from the fact that the preimage function $f^{-1}\colon \mathcal{P}(Y)\to \mathcal{P}(X)$ preserves arbitrary unions and intersections.
 \end{proof}
 
-Precomposing with the opposite of the discrete topology functor $\set \to \topo$ we obtain the following result.
+Precomposing with the opposite of the discrete topology functor $D\colon \set \to \topo$ we obtain the following result.
 
 \begin{corollary}\label{cor:fu}
 	There exists a functor $\mathcal{P}\colon \set^{op}\to \frm$ sending a set $X$ to $(\mathcal{P}(X), \subseteq)$ and a function $f\colon X\to Y$ to $f^{-1}\colon (\mathcal{P}(Y), \subseteq) \to (\mathcal{P}(X), \subseteq)$.
 \end{corollary}
 
+\iffalse 
 \begin{remark}\label{rem:nomeet}
-Notice that the functors of \Cref{prop:fu,cor:fu} are both faithful but not full. Indeed the image of every arrow  
+Notice that the functors of \Cref{prop:fu} is nor faithful nor full.  To see that it is not faithful it is enough to notice that every function $f:\mathbb{R}\to \mathbb{R}$ induces a continuous one $(\mathbb{R}, \{\emptyset, \mathbb{R}\})\to (\mathbb{R}, \{\emptyset, \mathbb{R}\})$ between the associate indiscrete spaces. It is immediate that for every such $f$, $\mathcal{O}_f$ is the identity.
+ 
+ Since $D$ is full if $\mathcal{P}$ is full than $\mathcal{O}$ is full too, so any counter-example to the fullness of the former disproves also the fullness of the latter.  Now, for every function $f\colon X\to Y$ we can notice that $f^{-1}$ preserves all meets, but not all morphisms of frames enjoy this property.
+ 
+ Consider the function
+ \begin{align*}
+ 	g\colon \mathcal{P}(\mathbb{N})&\to \mathcal{P}(\mathbb{N})\\
+ 	A & \mapsto \begin{cases}
+ 		\mathbb{N} & \mathbb{N}\smallsetminus A \text{ is finite}\\
+ 		\emptyset & \text{otherwise}
+  	\end{cases}
+ \end{align*}
+$g$ does not preserve arbitrary meets: for every $n\in \mathbb{N}$ let $A_n$ be $\mathbb{N}\smallsetminus\{n\}$, then we have:
+\[g(\bigcap_{n\in \mathbb{N}} A_n)=g(\emptyset)=\emptyset\neq \mathbb{N} = \bigcap_{n\in \mathbb{N}} \mathbb{N} =
+\bigcap_{n\in \mathbb{N}}g(A_n)\]
+ 
+ But $g$ defines a morphism of frames $(\mathcal{P}(\mathbb{N}), \subseteq)\to (\mathcal{P}(\mathbb{N}), \subseteq)$. 
+ \begin{itemize}
+ 	\item To prove preservation of finite meets, notice that on the one hand $g$ sends $\mathbb{N}$ to itself and so it preserves the empty meet while, on the other hand, given $X, Y \subseteq\mathbb{N}$ we have that:
+ 	\begin{align*}
+ 		g(X\cap Y) &= \begin{cases}
+ 			\mathbb{N} & \mathbb{N}\smallsetminus (X\cap Y)  \text{ is finite}\\
+ 			\emptyset & \text{otherwise}
+ 		\end{cases}= \begin{cases}
+ 		\mathbb{N} &( \mathbb{N}\smallsetminus X) \cup (\mathbb{N}\smallsetminus Y)  \text{ is finite}\\
+ 		\emptyset & \text{otherwise}
+ 		\end{cases}\\&=
+ 	\begin{cases}
+ 		\mathbb{N} &( \mathbb{N}\smallsetminus X) \text{ and } (\mathbb{N}\smallsetminus Y)  \text{ are both finite}\\
+ 		\emptyset & \text{otherwise}
+ 	\end{cases}
+ 	\end{align*}
+ 	and this immediately implies that $g(X\cap Y)=g(X)\cap g(Y)$.
+ 	\item For arbitrary joins, consider a family $\{A_i\}_{i\in I}$ of elements of $\mathcal{P}(\mathbb{N})$, then:
+ 	\begin{align*}
+ 		g(\bigcup_{i\in I} A_i) &= \begin{cases}
+ 			\mathbb{N} & \mathbb{N} \smallsetminus \bigcup_{i\in I} A_i  \text{ is finite}\\
+ 			\emptyset  &\text{otherwise }
+ 		\end{cases} = \begin{cases}
+ 		\mathbb{N} &  \bigcap_{i\in I} \mathbb{N} \smallsetminus A_i  \text{ is finite}\\
+ 		\emptyset  &\text{otherwise }
+ 		\end{cases}\\&= \begin{cases}
+ 		\mathbb{N} &   \text{there exists $k\in I$ such that $\mathbb{N}\smallsetminus A_k$ is finite}\\
+ 		\emptyset  &\text{otherwise }
+ 		\end{cases}\\&=
+ 		\begin{cases}
+ 			\mathbb{N} &   \text{there exists $k\in I$ such that $g(A_k)= \mathbb{N}$}\\
+ 			\emptyset  &\text{otherwise }
+ 		\end{cases}
+ 	\end{align*}
+ fromm which preservation of joins follows at once.
+  \end{itemize}
+
+Summing up, $g$ is a morphism of frames $(\mathcal{P}(\mathbb{N}), \subseteq) \to (\mathcal{P}(\mathbb{N}), \subseteq)$ which is not in the image of $\mathcal{P}$.
 \end{remark}
-
-
-
-Let us recall  Freyd 's  Adjoint Functor Theorem \cite{borceux1994handbook1,dikranjan2013categorical,freyd2003abelian,freyd1990categories,mac2013categories}in the case of posets.
-\begin{theorem}[Adjoint functor theorem for posets]\label{thm:radj} Let $(P, \leq)$ be a complete poset. If $f\colon (P,\leq)\to (Q, \leq)$ is a function which preserves arbitrary  . Then $f$ is a left adjoint.
+\fi 
+To continue we need to recall the classical version of Freyd 's  Adjoint Functor Theorem \cite{borceux1994handbook1,dikranjan2013categorical,freyd2003abelian,freyd1990categories,mac2013categories} for posets.
+\begin{theorem}[Adjoint functor theorem for posets]\label{thm:radj} Consider two posets $(P, \leq)$ and $(Q, \leq)$, with  $(P, \leq)$ complete. If $f\colon P\to Q$ is a function which preserves arbitrary  joins, then $f$ has a left adjoint given by
+	\begin{align*}
+		g\colon (Q, \leq) &\to (P, \leq)\\q &\mapsto \sup\{p \in P \mid f(p) \leq q\}
+	\end{align*}
 \end{theorem}
 \begin{proof}
-	contenuto...
+	We can start noticing that preservation of joins entails that $f$ is monotone. For every $q$ in $Q$ let us define 
+	\[P_q :=\{p \in P \mid f(p) \leq q\} \]
+	Since $(P, \leq)$ is complete we can define $g(q)$ as the supremum of $P_q$. We can immediately notice two things:
+	\begin{itemize}
+		\item  if $q\leq q'$ then $P_q\subseteq P_{q'}$ and so $g(q)\leq g(q')$,  hence $g$ defines a monotone function $(Q, \leq)\to (P, \leq)$.
+		\item since $f$ preserves arbitrary joins, then $f(g(q))$ is the supremum of the family
+		\[\{f(p)\mid f(p)\leq q\}\]
+		and so $f(g(q))\leq q$. 
+	\end{itemize}
+	
+	The previous two observation easily entails that $f\dashv g$:
+	\begin{itemize}
+		\item if $p\in P$ and $q\in Q$ are such that $f(p)\leq q$, then $p\in P_q$ and so $p\leq g(q)$;
+		\item viceversa, suppose that $p\in P$ and $q\in Q$ satisfy $p\leq g(q)$, then we have $f(p)\leq f(g(q))$ and this is less or equal than $q$. \qedhere
+	\end{itemize}
 \end{proof}
 
 Dualizing \Cref{thm:radj} we get immediately the following.
 \begin{corollary}\label{cor:ladj}
-	contenuto...
+	Let $(P, \leq)$ be a complete poset. If $f\colon (P,\leq)\to (Q, \leq)$ is a function which preserves arbitrary  meets, then $f$ has a right adjoint given by
+	\begin{align*}
+		g\colon (Q, \leq) &\to (P, \leq)\\q &\mapsto \inf\{p \in P \mid f(p) \leq q\}
+	\end{align*}
 \end{corollary}
+
+In turn, \Cref{thm:radj} gives us other two results.
 
 \begin{corollary}\label{cor:facts}
 Let $(H, \leq)$ be a frame, the following facts are true:
 \begin{enumerate}
-\item $(H, \leq)$ is an \emph{Heyting algebra}, i.e.~for every $h\in H$ the function $-\wedge h$ has a right adjoint $h\Rightarrow -$;
-\item 
+\item $(H, \leq)$ is an \emph{Heyting algebra}, i.e.~for every $h\in H$ the function $h \wedge -$ has a right adjoint $h\Rightarrow -$;
+\item a morphism of frames $f\colon (H, \leq)\to (K, \leq)$ has a right adjoint $f_*$.
 \end{enumerate}
 \end{corollary}
-\begin{proof}
+
+Finally, we can use \Cref{cor:ladj} to characterize the arrows in the image of the functor $\mathcal{P}\colon \set^{op} \to \frm$.
+\begin{corollary} Consider a morphism of frames $f\colon (\mathcal{P}(X), \subseteq)\to (\mathcal{P}(Y), \subseteq)$, then the following hold true:
 	\begin{enumerate}
-		\item 
-		\item 
+		\item $f$ preserves arbitrary meets;
+		\item $f$ is in the image of $\mathcal{P}\colon \set^{op} \to \frm$.
+	\end{enumerate}
+\end{corollary}
+\begin{proof} 
+	\begin{enumerate}
+		\item Let $\{A_i\}_{i\in I}$ be a family of subsets of $X$ and let $A$ be their intersection. For every $i\in I$ define:
+		\[B_i := \bigcup_{x\in A_i} f(\{x\}) \]
+		We claim that
+		\[\bigcup_{x\in A} f(\{x\}) = \bigcap_{i\in I} B_i\]
+		
+		\smallskip \noindent
+		$(\subseteq)$ If $z$ is an element of $\bigcup_{x\in A} f(\{x\}$, then there exists $x\in A$ such that $z\in f(\{x\})$. But then $f(\{x\})\subseteq B_i$ for every $i \in I$ and so $z$ belongs to the intersection of $\{B_i\}_{i\in I}$. 
+		
+		\smallskip \noindent
+		$(\supseteq)$ Let $z$ be an element in $\bigcap_{i\in I} B_i$. Then for every $i\in I$ there exists $x_i\in A_i$ such that $z\in f(\{x_i\})$. Now, let $i,j$ be two elements of $I$, if $x_i\neq x_j$ then we have:
+		\[f(\{x_i\}) \cap f(\{x_j\}) = f(\{x_i\}\cap \{x_j\}) = f(\emptyset) = \emptyset\]
+		We can then deduce that there exists a single $x\in A$ such that $z\in f(\{x\})$, as wanted.
+				
+				\smallskip 
+		Using the previous results we get:
+		\begin{align*}
+			&f(\bigcap_{i\in I} A_i) = f(A) = f(\bigcup_{x\in A} \{x\}) = \bigcup_{x\in A} f(\{x\}) \\= &\bigcap_{i\in I} B_i = \bigcap_{i\in I} \bigcup_{x\in A_i} f(\{x\}) = \bigcap_{i\in I} f(\bigcup_{x\in A_i} \{x\})= \bigcap_{i\in I} f(A_i)
+		\end{align*}
+		 
+		\item By the previous point an \Cref{cor:ladj}, we know that $f$ has a left adjoint $f_{!}\colon (\mathcal{P}(X), \subseteq)\to (\mathcal{P}(Y), \subseteq)$.  We are now going to prove that $f_{!}(\{x\})$ has cardinality $1$ for every $x\in X$.
+		
+		On the one hand $f_{!}(\{x\})$ cannot be  empty. Indeed, if $f_{!}(\{x\}) \subseteq \emptyset$ then by adjointness we get $\{x\}\subseteq f(\emptyset)$, but $f(\emptyset) = \emptyset$ and this is absurd. On the other hand, by preservation of arbitrary joins we have
+			\[\{x\}\subseteq X = f(Y) = f(\bigcup_{y\in Y}\{y\}) = \bigcup_{y\in Y} f(\{y\}) \]
+			and so there exists $y\in Y$ such that $\{x\}\subseteq f(\{y\})$ for some $y\in Y$. Hence $f_{!}(\{x\})\subseteq \{y\}$ and so $f_!(\{x\})$ cannot have cardinality bigger than one.
+	
+		Let us define $g(x)$ as the unique element of $f_{!}(\{x\})$. In this way we get a function $g\colon X\to Y$. Now, for every $y\in Y$, by \Cref{thm:radj}, \Cref{cor:ladj} and uniqueness of adjoints, we have:
+		\[g^{-1}(\{y\})= \{x\in X \mid f_{!}(\{x\}) \subseteq \{y\}\}= f(y)\] 
+		But then, preservation of unions yields $g^{-1}= f$ as wanted.
 	\end{enumerate}
 \end{proof}
 
-\begin{definition}\label{rem:bool}
+\begin{definition}\label{rem:bool} regolari e
 booleane
 \end{definition}
 
@@ -292,10 +400,15 @@ booleane
 \end{example}
 
 
-\begin{proposition}
-	contenuto...
+\begin{proposition} riflessione in booleane
 \end{proposition}
+\begin{proof}
+	contenuto...
+\end{proof}
 
+\begin{remark}
+	not functor
+\end{remark}
 \begin{definition}
 	atomi
 \end{definition}

@@ -1,4 +1,6 @@
 \documentclass[envcountsect,runningheads,a4paper]{llncs}
+\usepackage{geometry} \geometry{margin=2cm} 
+
 
 %\graphicspath{{./graphics/}}%helpful if your graphic files are in another directory
 
@@ -13,6 +15,7 @@
 \reportfalse
 
 \bibliographystyle{splncs04}
+
 
 %\usepackage{bm}
 %\usepackage{tocloft}
@@ -32,6 +35,9 @@
 \usetikzlibrary{matrix, arrows.meta, positioning, calc}
 \usepackage[usestackEOL]{stackengine}
 \usepackage{proof-at-the-end}
+\usepackage[all, cmtip]{xy}
+\newcommand{\id}[1]{\mathsf{id}_{#1}}
+
 
 \DeclareFontFamily{OT1}{pzc}{}
 \DeclareFontShape{OT1}{pzc}{m}{it}{<-> s * [1.200] pzcmi7t}{}
@@ -57,6 +63,12 @@
 \newcommand{\msub}[1]{\mathscr{M\text{-}Sub}_{\catname{#1}}}
 \newcommand{\dom}{\mathrm{dom}}
 \newcommand{\cod}{\mathrm{cod}}
+
+
+\newcommand{\acs}{\catname{aCS}}
+\newcommand{\cs}{\catname{CS}}
+\newcommand{\sg}{\catname{SGraph}}
+\newcommand{\rsg}{\catname{rSGraph}}
 \newcommand{\co}[1]{\{\abs{#1}\}}
 \newcommand{\eq}[3]{[#1 = #2]_{#3}}
 \newcommand{\equ}[2]{[#1 \equiv #2]}
@@ -75,7 +87,7 @@
 \newcommand{\ex}[1]{\mathscr{ex(#1)}}
 \newcommand{\inte}[1]{\llbracket{#1}\rrbracket}
 \newcommand{\sint}[1]{\catname{Syn}^{fo}(#1)}
-\newcommand{\frm}[0]{\catname{Frm}}
+\newcommand{\fram}[0]{\catname{Frm}}
 \newcommand{\topo}[0]{\catname{Top}}
 \newcommand{\set}[0]{\catname{Set}}
 \newcommand{\escape}[3]{#2 \mathfrak{E}_{#1} #3}
@@ -162,7 +174,7 @@
 	\and
 	Dept.~of Computer Science, University of Pisa, Italy
 	\\
-	\email{davide.castelnovo@uniud.it}, 
+	\email{castelnovod@gmail.com}, 
 	\email{fabio.gadducci@unipi.it}, 
 	\email{marino.miculan@uniud.it}
 }
@@ -204,36 +216,269 @@
 \section{Introduction}
 TO DO: vendere 'sta roba
 
-\section{Closure algebras and closure spaces}
-We start by recalling some definitions regarding frames and closure operators on them. Standard textbook references are \cite{borceux1994handbook3,dikranjan2013categorical,johnstone1982stone,maclane2012sheaves,vickers1989topology}. 
+\section{Closure spaces}
+In this section we recall the definition and first properties of \emph{closure spaces} \cite{ciancia2016spatial,ciancia2014specifying,bussi2023spatial}. For a more abstract approach to the subject of closure operators we refer the interested reader to \cite{dikranjan2013categorical}.
+
 
 \begin{definition}
-A poset $(H, \leq)$ is a \emph{frame} if:
+A \emph{closure operator} on a set $X$ is  a monotone function $c\colon (\mathcal{P}(X), \subseteq )  \to (\mathcal{P}(X), \subseteq)$ such that:
 \begin{enumerate}
-	\item it has finite meets;
-	\item it has arbitrary joins;
-	\item for every family $(y_i)_{i\in I}\subseteq H$ and $x \in H$ we have:
-	\[x\wedge \bigvee_{i\in I} y_i \leq \bigvee_{i\in I} x\wedge y_i\] 
+	\item $c$ is \emph{expansive}: $\id{\mathcal{P}(X)}\leq c$;
+	\item $c$ preserves finite unions.
 \end{enumerate}
 
-A morphism of frames $f\colon (H, \leq)\to (K, \leq)$ is a function $f\colon H\to K$ which preserves finite meets and arbitrary joins. We will denote by $\frm$ the resulting category.
+A \emph{closure space} is a pair $(X, c)$ given by a set and a closure operator on it.
+
+A \emph{continuous morphism} between two closure spaces $(X, c)\to (Y, d)$ is a function $f\colon X\to Y$ such that:
+\[c\circ f^* \leq f^*\circ d\]
+ where $f^*\colon (\mathcal{P}(Y), \subseteq)\to (\mathcal{P}(X), \subseteq)$ assigns to a set its preimage.
+
+We will denote by $\cs$ the category so obtained.
+\end{definition}
+
+The preimage morphism $f^*\colon (\mathcal{P}(Y), \subseteq)\to (\mathcal{P}(X), \subseteq)$ preserves arbitrary meets and so, by Freyd's adjoint functor theorem \cite{freyd2003abelian,dikranjan2013categorical}, it has a left adjoint $f_! \colon (\mathcal{P}(X), \subseteq)\to (\mathcal{P}(Y), \subseteq)$ assigning to $A\subset X$ its image through $f$.
+
+
+\begin{proposition}\label{prop:im}
+	Let $(X, c)$ and $(Y, d)$ be two closure spaces,  then he following are equivalent for a function $f\colon X\to Y$:
+	\begin{enumerate}
+		\item $f$ is continuous;
+		\item $f_! \circ c  \leq d \circ f_!$. 
+	\end{enumerate}
+\end{proposition}
+\begin{proof} 
+	$(1\Rightarrow 2).$ Suppose that $f$ is continuous, then:
+	\begin{align*}
+		f_!\circ c  &\leq f_! \circ  c\circ f^*\circ f_! \\&\leq f_!\circ f^*\circ d\circ f_! \\&\leq d\circ f_!
+	\end{align*}
+	as wanted.
+	
+	\smallskip \noindent $(2\Rightarrow 1).$ Computing we have:
+	\begin{align*}c\circ f^*&\leq f^*\circ f_! \circ c \circ f^*  \\&\leq f^* \circ d\circ f_!\circ f^* \\&\leq f^*\circ d
+	\end{align*}
+	proving that $f$ is continuous.
+	
+\end{proof}
+
+
+Let us provide some examples.
+
+\begin{example}
+	contenuto...
+\end{example}
+
+
+\begin{example}
+	contenuto...
+\end{example}
+
+
+
+	
+
+\subsection{Derived spatial operators}
+
+TO DO: operatori spaziali
+
+\subsection{Closure spaces and simple graphs}
+
+In this section we are going to explore the relationship between closure spaces and simple graphs. The latter are in fact equivalent to the subcategory of $\cs$ given by spaces whose closure operatore preserves arbitrary suprema.
+
+\begin{definition}
+	A \emph{simple graph} is a pair $(V, R)$ where $V$ is a set of \emph{nodes} and $R$ a subset of $V\times V$. A morphism $(V, R)\to (W, S)$ is a function $f\colon V\to W$ such that there exists $\hat{f}\colon R\to S$ fitting in the diagram below, where the vertical arrows are inclusions.
+	\[\xymatrix@C=25pt{R \ar[r]^{\hat{f}} \ar@{>->}[d]_{i_R}& S \ar@{>->}[d]^{i_S}\\ V\times V \ar[r]_-{f\times f}& W\times W}\]
+	We will denote by $\sg$ the resulting category.
+\end{definition}
+
+\begin{remark}\label{rem:elem}
+	Notice that a function $f\colon V\to W$ defines a morphism  $(V, R)\to (W, S)$ if and only if $(f(x), f(y))$ is in $S$ for every pair $(x, y)\in R$.
+\end{remark}
+
+
+Our interest in simple graphs lies in the fact that the provides examples of closure spaces, as shown by the following definition.
+
+\begin{definition}\label{ex:graph}
+	Let $(V, R)$ be a simple graph, for every $v\in V$ we put
+	\[R_v:=\{w\in v \mid (v, w)\in R\}\]
+Then we define  $F(V, R)$ as $(V, c_{R})$ where
+	\begin{align*}c_R\colon \mathcal{P}(V)&\to \mathcal{P}(V)\\
+		A &\mapsto A \cup \bigcup_{a\in A} R_a
+	\end{align*}
+\end{definition}
+
+\begin{proposition}
+	$F(V,R)$ is a closure space for every simple graph $(V, R)$.
+\end{proposition}
+\begin{proof}
+	Monotonicity and expansivity of of $c_R$ follow at once from the definition. Finally, $c_R(\emptyset) = \emptyset$ since the empty union is $\emptyset$, while,  given $A, B\subseteq V$, we have: 
+	\begin{align*}
+	c_R(A\cup B) &=A \cup \bigcup_{a\in A \cup B} R_a \\&= A\cup B \bigcup_{a\in A} R_a \cup \bigcup_{b\in B} R_b \\&= (A \cup \bigcup_{a\in A} R_a ) \cup (B \cup \bigcup_{b\in B} R_b )\\&= c_R(A)\cup c_R(B)
+	\end{align*}
+	and we can conclude. \qedhere 
+\end{proof}
+
+We can promote this construction to a functor $\sg \to \cs$.
+
+\begin{proposition}
+There exists a functor $F\colon \sg \to \cs$ sending a simple graph $(V, R)$ to $F(V, R)$ and which is the identity on arrows.
+\end{proposition} 
+\begin{proof}
+	We just have to check that a morphism $f\colon (V, R)\to (W, S)$ induces a continuous morphism $(V, c_R)\to (W, c_S)$.  For every subset $A$ of $W$, let $v$ be an element of $c_R(f^*(A))$. Then there exist $a\in f^*(A)$ such that $(a, v)\in R$. By \Cref{rem:elem} we know that $f(v)$ belongs to $S_{f(a)}$. Thus $f(v)$ is in $c_S(A)$ and so, since $f(a)\in A$, this allows us to conclude.
+	\end{proof}
+	
+	The previous construction has an adjoint.
+	
+	
+\begin{lemma}
+	The functor $F\colon \sg\to \cs$ is a left adjoint.
+\end{lemma}
+\begin{proof}
+	For every closure space $(X, c)$ we can define $G(X,c)$ as $(X, R_c)$ where
+	\[R_c:=\{(x,y)\in X\times X \mid y \in c(\{x\})\}\]
+	
+	Now, for every closure space $(X,c)$ we have $F(G(X,c)) = (X, c_{R_c})$ where, for every $A\subseteq X$ we have
+	\begin{align*}
+		c_{R_c}(A)&= A\cup \bigcup_{a\in A} \{y\in X \mid (a,y)\in R_c\}\\&= A\cup  \bigcup_{a\in A} \{y\in X \mid y\in c(\{a\})\}\\&=A\cup  \bigcup_{a\in A} c(\{a\}) \\&= \bigcup_{a\in A} c(\{a\})
+	\end{align*}
+	where the last identity follows from the fact that, for every $a\in A$, $a\in c(\{a\})$.
+
+Now, since $c$ is monotone then
+\begin{align*}
+	c_{R_c}(A) &=\bigcup_{a\in A} c(\{a\}) \\&\subseteq c(\bigcup_{a\in A}\{a\})\\&=c(A)   
+\end{align*}
+	
+	Thus $\id{X}$ is a continuous morphism $(X,  c_{R_c})\to (X, c)$. Let $f\colon F(V, R)\to (X, c)$ be an arrow in $\cs$, if we show that $f$ is a morphism of simple graphs between $(V, R)\to (X, R_c)$ we are done.
+	
+	Let $(v,w)$ be an element of $R$, we have to show that $f(w)\in c(\{f(v)\})$. Now, by definition $w\in c_R(\{v\})$, thus by \Cref{prop:im}
+	\begin{align*}
+		\{f(w)\} &= f_!(\{w\}) \\&\subseteq f_!(c_R(\{v\}))\\& \subseteq c(f_{\!}(\{v\}))
+	\end{align*}
+	and we can conclude. \qedhere
+\end{proof}
+
+\begin{remark}\label{rem:unit}  We can also compute the unit of the adjunction $F\dashv G$.  Given a simple graph $(V, R)$, we can notice that $G(F(V, R))=(V, R_{c_R})$ 	with $R\subseteq R_{c_R}$. To see this, notice that $R_{c_R}$ is the union of  $R$ and the diagonal $\Delta_V$, where:
+	\[\Delta_V := \{(v,w)\in V\times V\mid v = w\}\]
+
+Let us show this:
+\begin{itemize}
+	\item let $(v,w)$ be an element of $R\cup \Delta_V$, on the one hand if $v\neq w$ then there is nothing to prove, on the other hand if $v=w$ then $w \in \{v\}$ which is contained in $c_R(\{v\})$ and so $(v,w)$ belongs to $R_{c_R}$;
+	\item let now $(v,w)$ be a pair in $R_{c_R}$, then $w\in \{v\}\cup R_v$, if $w\in \{v\}$ then $w=v$ and so $(v,w)\in \Delta_V$, while if $w\in R_v$ then $(v,w)\in R$ by definition.
+\end{itemize}
+	
+	Thus $\id{V}$ is a morphism $(V, R)\to (V, R_{c_R})$. Consider an arrow $f\colon (V, R)\to G(X, c)$ for some $(X, c)\in \cs$. Then $f\colon V\to X$ defines a morphism $F(V, R)\to (X,c)$: let $A$ be a subset of $X$, and $v$ an element of  $c_R(f^*(A))$, then there exists $a\in f^*(A)$ such that $(a, v)\in R$. By \Cref{rem:elem} we know that $(f(a), f(v))$ is in $R_c$ but then $f(v)$ must belong to $c(\{f(a)\})$ and so to $c(A)$.  Thus $v\in f^*(c(A))$ and we are done.
+\end{remark}
+
+	We are now going to characterize the fixed points of the adjunction $F\dashv G$.
+
+\begin{definition}
+	Given a closure space $(X, c)$ and a simple graph $(V, R)$, we say that:
+	\begin{itemize}
+		\item $c$ is \emph{additive} if $c$ preserves arbitrary unions, we will denote by $\acs$ the full subcategory of $\cs$ given by closure spaces with additive closure operators.
+		
+		\item $R$ is \emph{reflexive} if the diagonal $\Delta_V$ is contained in $R$, we will denote by $\rsg$ the full subcategory of $\sg$ given by simple graphs $(V, R)$ with $R$ reflexive.
+	\end{itemize} 
+\end{definition}
+
+\begin{remark}
+	We can notice the following elementary but pivotal facts:
+	\begin{enumerate}
+		\item for every simple graph $(V, R)$, the closure operator $c_R$ of $F(V, c_R)$ is additive: indeed if $\{A_i\}_{i\in I}$ is a family of subsets of $V$ with union $A$ we have:
+		\begin{align*}
+			c_R(A) &= A \cup \bigcup_{a\in A} R_a \\&= A\cup \bigcup_{i\in I} \bigcup_{b_i\in A_i} R_{b_i} \\&=\bigcup_{i\in I} A_i \cup \bigcup_{i\in I} \bigcup_{b_i\in A_i} R_{b_i} \\&=  \bigcup_{i\in I}( A\cup \bigcup_{b_i\in A_i} R_{b_i} )\\&= \bigcup_{i\in I} c_R(A_i)
+		\end{align*}
+		\item for every closure space $(X, c)$, $G(X,c)$ is in $\rsg$: indeed if $G(X, c)=(X, R_c)$, then for every $x\in X$ we know that $\{x\}\subseteq c_R(\{x\})$ and so $(x,x)$ belongs to $R_c$.
+ 	\end{enumerate}
+\end{remark}
+
+
+\begin{lemma}\label{lem:clos}
+The following are equivalent for a closure space $(X,c)$:
+\begin{enumerate}
+	\item $c$ is additive; 
+	\item the component of the counit of the adjunction $F \dashv G$ at $(X, c)$ is an isomorphism.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+	
+\end{proof}
+
+
+
+\begin{lemma}\label{lem:graph}
+	The following are equivalent for a simple graph $(V,R)$:
+	\begin{enumerate}
+		\item $R$ is reflexive; 
+		\item the component of the unit of the adjunction $F \dashv G$ at $(V, R)$ is an isomorphism.
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+	
+\end{proof}
+
+Putting together \Cref{lem:clos,lem:graph} we get the following result.
+
+\begin{corollary}Let $I\colon \acs\to \cs$ and $J\colon \rsg \to \sg$ be the inclusion functors, then ther exists an equivalence of category $\hat{F}\colon \rsg\to \acs$, with quasi-inverse $\hat{G}\colon \acs \to \rsg$, fitting in the diagram below.
+	\[\xymatrix{ \acs\ar[d]_{I} \ar@{.>}[r]^-{\hat{G}}& \rsg \ar[d]^{J}\ar@{.>}[r]^-{\hat{F}}& \acs \ar[d]^{I}\\\cs\ar[r]_-{G} & \sg \ar[r]_-{F} & \cs}\]
+\end{corollary}
+
+
+\section{Sheaves of closure spaces}
+
+TO DO: introdurre operatori temporali necessariamente, possibilmente, until, next per i discreti
+
+\section{A spatio-temporal logic for closure spaces}
+
+\subsection{The calculus STLCS}
+\subsubsection{Spatial logic for closure spaces}
+
+\subsubsection{Adding temporality}
+
+\subsection{Interpreting STLCS}
+
+\section{Conclusions}
+TO DO: vendere 'sta roba parte 2
+
+%
+%% Bibliography
+%
+\bibliographystyle{splncs04}
+\bibliography{bibliog}
+
+\clearpage
+
+\appendix
+
+\iffalse 
+\section{Some facts about frames}\label{sec:frames}
+This appendix is devoted to recalli some definitions and well-known facts about frames and morphism between them. Standard textbook references are \cite{borceux1994handbook3,dikranjan2013categorical,johnstone1982stone,maclane2012sheaves,vickers1989topology}. 
+
+\begin{definition}
+	A poset $(H, \leq)$ is a \emph{frame} if:
+	\begin{enumerate}
+		\item it has finite meets;
+		\item it has arbitrary joins;
+		\item for every family $(y_i)_{i\in I}\subseteq H$ and $x \in H$ we have:
+		\[x\wedge \bigvee_{i\in I} y_i \leq \bigvee_{i\in I} x\wedge y_i\] 
+	\end{enumerate}
+	
+	A morphism of frames $f\colon (H, \leq)\to (K, \leq)$ is a function $f\colon H\to K$ which preserves finite meets and arbitrary joins. We will denote by $\fram$ the resulting category.
 \end{definition}
 
 \begin{example}\label{ex:set}
-Given a set $X$, its power set $(\mathcal{P}(X), \subseteq)$ is a frame:  joins and meets are provided by unions and intersections which distribute on each other.
+	Given a set $X$, its power set $(\mathcal{P}(X), \subseteq)$ is a frame:  joins and meets are provided by unions and intersections which distribute on each other.
 \end{example}
 
 \begin{example}\label{ex:topo}
-Topologies generalize the previous example. Indeed, let $(X, \mathcal{O}_X)$ be a topological spaces. Then $(\mathcal{O}_X, \subseteq)$ has finite meets as $\emptyset\in \mathcal{O}_X$ and the intersection of two opens is open. Since the arbitrary union of open sets is open then $(\mathcal{O}_X, \subseteq)$ also has arbitrary joins. The distributivity of binary meets over joins follows from the fact that intersections distributes over unions.
- \end{example}
+	Topologies generalize the previous example. Indeed, let $(X, \mathcal{O}_X)$ be a topological spaces. Then $(\mathcal{O}_X, \subseteq)$ has finite meets as $\emptyset\in \mathcal{O}_X$ and the intersection of two opens is open. Since the arbitrary union of open sets is open then $(\mathcal{O}_X, \subseteq)$ also has arbitrary joins. The distributivity of binary meets over joins follows from the fact that intersections distributes over unions.
+\end{example}
 
 
 
 We can put \Cref{ex:topo,ex:set} in a broader context.
 \begin{proposition}\label{prop:fu}
-	Let $\topo$ be the category of topological spaces and continuous map. There is a functor $\mathcal{O}\colon \topo^{op}\to \frm$ sending a topological space $(X, \mathcal{O}_X)$ to its topology $(\mathcal{O}_X, \subseteq)$ and a continuous function $f\colon (X, \mathcal{O}_X)\to (Y, \mathcal{O}_Y)$ to
+	Let $\topo$ be the category of topological spaces and continuous map. There is a functor $\mathcal{O}\colon \topo^{op}\to \fram$ sending a topological space $(X, \mathcal{O}_X)$ to its topology $(\mathcal{O}_X, \subseteq)$ and a continuous function $f\colon (X, \mathcal{O}_X)\to (Y, \mathcal{O}_Y)$ to
 	\begin{align*}
-	\mathcal{O}_{f}\colon (\mathcal{O }_Y, \subseteq)&\to (\mathcal{O}_X, \subseteq) \\ U &\mapsto f^{-1}(U)  
+		\mathcal{O}_{f}\colon (\mathcal{O }_Y, \subseteq)&\to (\mathcal{O}_X, \subseteq) \\ U &\mapsto f^{-1}(U)  
 	\end{align*} 
 \end{proposition}
 \begin{proof} By  \Cref{ex:topo} we only have to show that $\mathcal{O}_f$ is a morphism of frames, but this follows immediately from the fact that the preimage function $f^{-1}\colon \mathcal{P}(Y)\to \mathcal{P}(X)$ preserves arbitrary unions and intersections.
@@ -242,65 +487,65 @@ We can put \Cref{ex:topo,ex:set} in a broader context.
 Precomposing with the opposite of the discrete topology functor $D\colon \set \to \topo$ we obtain the following result.
 
 \begin{corollary}\label{cor:fu}
-	There exists a functor $\mathcal{P}\colon \set^{op}\to \frm$ sending a set $X$ to $(\mathcal{P}(X), \subseteq)$ and a function $f\colon X\to Y$ to $f^{-1}\colon (\mathcal{P}(Y), \subseteq) \to (\mathcal{P}(X), \subseteq)$.
+	There exists a functor $\mathcal{P}\colon \set^{op}\to \fram$ sending a set $X$ to $(\mathcal{P}(X), \subseteq)$ and a function $f\colon X\to Y$ to $f^{-1}\colon (\mathcal{P}(Y), \subseteq) \to (\mathcal{P}(X), \subseteq)$.
 \end{corollary}
 
 \iffalse 
 \begin{remark}\label{rem:nomeet}
-Notice that the functors of \Cref{prop:fu} is nor faithful nor full.  To see that it is not faithful it is enough to notice that every function $f:\mathbb{R}\to \mathbb{R}$ induces a continuous one $(\mathbb{R}, \{\emptyset, \mathbb{R}\})\to (\mathbb{R}, \{\emptyset, \mathbb{R}\})$ between the associate indiscrete spaces. It is immediate that for every such $f$, $\mathcal{O}_f$ is the identity.
- 
- Since $D$ is full if $\mathcal{P}$ is full than $\mathcal{O}$ is full too, so any counter-example to the fullness of the former disproves also the fullness of the latter.  Now, for every function $f\colon X\to Y$ we can notice that $f^{-1}$ preserves all meets, but not all morphisms of frames enjoy this property.
- 
- Consider the function
- \begin{align*}
- 	g\colon \mathcal{P}(\mathbb{N})&\to \mathcal{P}(\mathbb{N})\\
- 	A & \mapsto \begin{cases}
- 		\mathbb{N} & \mathbb{N}\smallsetminus A \text{ is finite}\\
- 		\emptyset & \text{otherwise}
-  	\end{cases}
- \end{align*}
-$g$ does not preserve arbitrary meets: for every $n\in \mathbb{N}$ let $A_n$ be $\mathbb{N}\smallsetminus\{n\}$, then we have:
-\[g(\bigcap_{n\in \mathbb{N}} A_n)=g(\emptyset)=\emptyset\neq \mathbb{N} = \bigcap_{n\in \mathbb{N}} \mathbb{N} =
-\bigcap_{n\in \mathbb{N}}g(A_n)\]
- 
- But $g$ defines a morphism of frames $(\mathcal{P}(\mathbb{N}), \subseteq)\to (\mathcal{P}(\mathbb{N}), \subseteq)$. 
- \begin{itemize}
- 	\item To prove preservation of finite meets, notice that on the one hand $g$ sends $\mathbb{N}$ to itself and so it preserves the empty meet while, on the other hand, given $X, Y \subseteq\mathbb{N}$ we have that:
- 	\begin{align*}
- 		g(X\cap Y) &= \begin{cases}
- 			\mathbb{N} & \mathbb{N}\smallsetminus (X\cap Y)  \text{ is finite}\\
- 			\emptyset & \text{otherwise}
- 		\end{cases}= \begin{cases}
- 		\mathbb{N} &( \mathbb{N}\smallsetminus X) \cup (\mathbb{N}\smallsetminus Y)  \text{ is finite}\\
- 		\emptyset & \text{otherwise}
- 		\end{cases}\\&=
- 	\begin{cases}
- 		\mathbb{N} &( \mathbb{N}\smallsetminus X) \text{ and } (\mathbb{N}\smallsetminus Y)  \text{ are both finite}\\
- 		\emptyset & \text{otherwise}
- 	\end{cases}
- 	\end{align*}
- 	and this immediately implies that $g(X\cap Y)=g(X)\cap g(Y)$.
- 	\item For arbitrary joins, consider a family $\{A_i\}_{i\in I}$ of elements of $\mathcal{P}(\mathbb{N})$, then:
- 	\begin{align*}
- 		g(\bigcup_{i\in I} A_i) &= \begin{cases}
- 			\mathbb{N} & \mathbb{N} \smallsetminus \bigcup_{i\in I} A_i  \text{ is finite}\\
- 			\emptyset  &\text{otherwise }
- 		\end{cases} = \begin{cases}
- 		\mathbb{N} &  \bigcap_{i\in I} \mathbb{N} \smallsetminus A_i  \text{ is finite}\\
- 		\emptyset  &\text{otherwise }
- 		\end{cases}\\&= \begin{cases}
- 		\mathbb{N} &   \text{there exists $k\in I$ such that $\mathbb{N}\smallsetminus A_k$ is finite}\\
- 		\emptyset  &\text{otherwise }
- 		\end{cases}\\&=
- 		\begin{cases}
- 			\mathbb{N} &   \text{there exists $k\in I$ such that $g(A_k)= \mathbb{N}$}\\
- 			\emptyset  &\text{otherwise }
- 		\end{cases}
- 	\end{align*}
- fromm which preservation of joins follows at once.
-  \end{itemize}
-
-Summing up, $g$ is a morphism of frames $(\mathcal{P}(\mathbb{N}), \subseteq) \to (\mathcal{P}(\mathbb{N}), \subseteq)$ which is not in the image of $\mathcal{P}$.
+	Notice that the functors of \Cref{prop:fu} is nor faithful nor full.  To see that it is not faithful it is enough to notice that every function $f:\mathbb{R}\to \mathbb{R}$ induces a continuous one $(\mathbb{R}, \{\emptyset, \mathbb{R}\})\to (\mathbb{R}, \{\emptyset, \mathbb{R}\})$ between the associate indiscrete spaces. It is immediate that for every such $f$, $\mathcal{O}_f$ is the identity.
+	
+	Since $D$ is full if $\mathcal{P}$ is full than $\mathcal{O}$ is full too, so any counter-example to the fullness of the former disproves also the fullness of the latter.  Now, for every function $f\colon X\to Y$ we can notice that $f^{-1}$ preserves all meets, but not all morphisms of frames enjoy this property.
+	
+	Consider the function
+	\begin{align*}
+		g\colon \mathcal{P}(\mathbb{N})&\to \mathcal{P}(\mathbb{N})\\
+		A & \mapsto \begin{cases}
+			\mathbb{N} & \mathbb{N}\smallsetminus A \text{ is finite}\\
+			\emptyset & \text{otherwise}
+		\end{cases}
+	\end{align*}
+	$g$ does not preserve arbitrary meets: for every $n\in \mathbb{N}$ let $A_n$ be $\mathbb{N}\smallsetminus\{n\}$, then we have:
+	\[g(\bigcap_{n\in \mathbb{N}} A_n)=g(\emptyset)=\emptyset\neq \mathbb{N} = \bigcap_{n\in \mathbb{N}} \mathbb{N} =
+	\bigcap_{n\in \mathbb{N}}g(A_n)\]
+	
+	But $g$ defines a morphism of frames $(\mathcal{P}(\mathbb{N}), \subseteq)\to (\mathcal{P}(\mathbb{N}), \subseteq)$. 
+	\begin{itemize}
+		\item To prove preservation of finite meets, notice that on the one hand $g$ sends $\mathbb{N}$ to itself and so it preserves the empty meet while, on the other hand, given $X, Y \subseteq\mathbb{N}$ we have that:
+		\begin{align*}
+			g(X\cap Y) &= \begin{cases}
+				\mathbb{N} & \mathbb{N}\smallsetminus (X\cap Y)  \text{ is finite}\\
+				\emptyset & \text{otherwise}
+			\end{cases}= \begin{cases}
+				\mathbb{N} &( \mathbb{N}\smallsetminus X) \cup (\mathbb{N}\smallsetminus Y)  \text{ is finite}\\
+				\emptyset & \text{otherwise}
+			\end{cases}\\&=
+			\begin{cases}
+				\mathbb{N} &( \mathbb{N}\smallsetminus X) \text{ and } (\mathbb{N}\smallsetminus Y)  \text{ are both finite}\\
+				\emptyset & \text{otherwise}
+			\end{cases}
+		\end{align*}
+		and this immediately implies that $g(X\cap Y)=g(X)\cap g(Y)$.
+		\item For arbitrary joins, consider a family $\{A_i\}_{i\in I}$ of elements of $\mathcal{P}(\mathbb{N})$, then:
+		\begin{align*}
+			g(\bigcup_{i\in I} A_i) &= \begin{cases}
+				\mathbb{N} & \mathbb{N} \smallsetminus \bigcup_{i\in I} A_i  \text{ is finite}\\
+				\emptyset  &\text{otherwise }
+			\end{cases} = \begin{cases}
+				\mathbb{N} &  \bigcap_{i\in I} \mathbb{N} \smallsetminus A_i  \text{ is finite}\\
+				\emptyset  &\text{otherwise }
+			\end{cases}\\&= \begin{cases}
+				\mathbb{N} &   \text{there exists $k\in I$ such that $\mathbb{N}\smallsetminus A_k$ is finite}\\
+				\emptyset  &\text{otherwise }
+			\end{cases}\\&=
+			\begin{cases}
+				\mathbb{N} &   \text{there exists $k\in I$ such that $g(A_k)= \mathbb{N}$}\\
+				\emptyset  &\text{otherwise }
+			\end{cases}
+		\end{align*}
+		fromm which preservation of joins follows at once.
+	\end{itemize}
+	
+	Summing up, $g$ is a morphism of frames $(\mathcal{P}(\mathbb{N}), \subseteq) \to (\mathcal{P}(\mathbb{N}), \subseteq)$ which is not in the image of $\mathcal{P}$.
 \end{remark}
 \fi 
 To continue we need to recall the classical version of Freyd 's  Adjoint Functor Theorem \cite{borceux1994handbook1,dikranjan2013categorical,freyd2003abelian,freyd1990categories,mac2013categories} for posets.
@@ -338,18 +583,18 @@ Dualizing \Cref{thm:radj} we get immediately the following.
 In turn, \Cref{thm:radj} gives us other two results.
 
 \begin{corollary}\label{cor:facts}
-Let $(H, \leq)$ be a frame, the following facts are true:
-\begin{enumerate}
-\item $(H, \leq)$ is an \emph{Heyting algebra}, i.e.~for every $h\in H$ the function $h \wedge -$ has a right adjoint $h\Rightarrow -$;
-\item a morphism of frames $f\colon (H, \leq)\to (K, \leq)$ has a right adjoint $f_*$.
-\end{enumerate}
+	Let $(H, \leq)$ be a frame, the following facts are true:
+	\begin{enumerate}
+		\item $(H, \leq)$ is an \emph{Heyting algebra}, i.e.~for every $h\in H$ the function $h \wedge -$ has a right adjoint $h\Rightarrow -$;
+		\item a morphism of frames $f\colon (H, \leq)\to (K, \leq)$ has a right adjoint $f_*$.
+	\end{enumerate}
 \end{corollary}
 
-Finally, we can use \Cref{cor:ladj} to characterize the arrows in the image of the functor $\mathcal{P}\colon \set^{op} \to \frm$.
+Finally, we can use \Cref{cor:ladj} to show that $\mathcal{P}\colon \set^{op} \to \fram$ is full.
 \begin{corollary} Consider a morphism of frames $f\colon (\mathcal{P}(X), \subseteq)\to (\mathcal{P}(Y), \subseteq)$, then the following hold true:
 	\begin{enumerate}
 		\item $f$ preserves arbitrary meets;
-		\item $f$ is in the image of $\mathcal{P}\colon \set^{op} \to \frm$.
+		\item $f$ is in the image of $\mathcal{P}\colon \set^{op} \to \fram$.
 	\end{enumerate}
 \end{corollary}
 \begin{proof} 
@@ -366,27 +611,31 @@ Finally, we can use \Cref{cor:ladj} to characterize the arrows in the image of t
 		$(\supseteq)$ Let $z$ be an element in $\bigcap_{i\in I} B_i$. Then for every $i\in I$ there exists $x_i\in A_i$ such that $z\in f(\{x_i\})$. Now, let $i,j$ be two elements of $I$, if $x_i\neq x_j$ then we have:
 		\[f(\{x_i\}) \cap f(\{x_j\}) = f(\{x_i\}\cap \{x_j\}) = f(\emptyset) = \emptyset\]
 		We can then deduce that there exists a single $x\in A$ such that $z\in f(\{x\})$, as wanted.
-				
-				\smallskip 
+		
+		\smallskip 
 		Using the previous results we get:
 		\begin{align*}
 			&f(\bigcap_{i\in I} A_i) = f(A) = f(\bigcup_{x\in A} \{x\}) = \bigcup_{x\in A} f(\{x\}) \\= &\bigcap_{i\in I} B_i = \bigcap_{i\in I} \bigcup_{x\in A_i} f(\{x\}) = \bigcap_{i\in I} f(\bigcup_{x\in A_i} \{x\})= \bigcap_{i\in I} f(A_i)
 		\end{align*}
-		 
+		
 		\item By the previous point an \Cref{cor:ladj}, we know that $f$ has a left adjoint $f_{!}\colon (\mathcal{P}(X), \subseteq)\to (\mathcal{P}(Y), \subseteq)$.  We are now going to prove that $f_{!}(\{x\})$ has cardinality $1$ for every $x\in X$.
 		
 		On the one hand $f_{!}(\{x\})$ cannot be  empty. Indeed, if $f_{!}(\{x\}) \subseteq \emptyset$ then by adjointness we get $\{x\}\subseteq f(\emptyset)$, but $f(\emptyset) = \emptyset$ and this is absurd. On the other hand, by preservation of arbitrary joins we have
-			\[\{x\}\subseteq X = f(Y) = f(\bigcup_{y\in Y}\{y\}) = \bigcup_{y\in Y} f(\{y\}) \]
-			and so there exists $y\in Y$ such that $\{x\}\subseteq f(\{y\})$ for some $y\in Y$. Hence $f_{!}(\{x\})\subseteq \{y\}$ and so $f_!(\{x\})$ cannot have cardinality bigger than one.
-	
+		\[\{x\}\subseteq X = f(Y) = f(\bigcup_{y\in Y}\{y\}) = \bigcup_{y\in Y} f(\{y\}) \]
+		and so there exists $y\in Y$ such that $\{x\}\subseteq f(\{y\})$ for some $y\in Y$. Hence $f_{!}(\{x\})\subseteq \{y\}$ and so $f_!(\{x\})$ cannot have cardinality bigger than one.
+		
 		Let us define $g(x)$ as the unique element of $f_{!}(\{x\})$. In this way we get a function $g\colon X\to Y$. Now, for every $y\in Y$, by \Cref{thm:radj}, \Cref{cor:ladj} and uniqueness of adjoints, we have:
 		\[g^{-1}(\{y\})= \{x\in X \mid f_{!}(\{x\}) \subseteq \{y\}\}= f(y)\] 
 		But then, preservation of unions yields $g^{-1}= f$ as wanted.
 	\end{enumerate}
 \end{proof}
 
+\begin{example}
+	contenuto...
+\end{example}
+
 \begin{definition}\label{rem:bool} regolari e
-booleane
+	booleane
 \end{definition}
 
 
@@ -422,32 +671,8 @@ In this paper we are particularly interested in locales arising as power sets. L
 	contenuto...
 \end{proof}
 
+\fi 
 
-\subsection{Closure operators on frames}
-
-
-TO DO: operatori spaziali
-\section{Sheaves of closure algebras}
-
-TO DO: introdurre operatori temporali necessariamente, possibilmente, until, next per i discreti
-
-\section{A spatio-temporal logic for closure spaces}
-
-\subsection{The calculus STLCS}
-\subsubsection{Spatial logic for closure spaces}
-
-\subsubsection{Adding temporality}
-
-\subsection{Interpreting STLCS}
-
-\section{Conclusions}
-TO DO: vendere 'sta roba parte 2
-
-%
-%% Bibliography
-%
-\bibliographystyle{splncs04}
-\bibliography{bibliog}
 \end{document}
 
 
@@ -2084,8 +2309,9 @@ A Curry-Howard isomorphism would yield a functional programming language with co
 	
 \clearpage
 %% Appendix
-
 \appendix
+
+
 \section{Omitted proofs}\label{sec:proofs}
 \printProofs
 \end{document}

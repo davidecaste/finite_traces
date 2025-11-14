@@ -256,7 +256,7 @@ The preimage morphism $f^*\colon (\mathcal{P}(Y), \subseteq)\to (\mathcal{P}(X),
 	\smallskip \noindent $(2\Rightarrow 1).$ Computing we have:
 	\begin{align*}c\circ f^*&\leq f^*\circ f_! \circ c \circ f^*  \\&\leq f^* \circ d\circ f_!\circ f^* \\&\leq f^*\circ d
 	\end{align*}
-	proving that $f$ is continuous.
+	proving that $f$ is continuous. \qedhere 
 	
 \end{proof}
 
@@ -272,13 +272,19 @@ Let us provide some examples.
 	contenuto...
 \end{example}
 
-
-
-	
-
 \subsection{Derived spatial operators}
 
-TO DO: operatori spaziali
+This section is devoted to the study of the operators that can be obtained combining the closure operaator of a given a closure space $(X,c)$ with the complete boolean algebra structure of $(\mathcal{P}(X), \subseteq)$.
+
+\begin{definition}[Backwards closure]
+	contenuto...
+\end{definition}
+
+
+
+
+
+
 
 \subsection{Closure spaces and simple graphs}
 
@@ -329,7 +335,7 @@ There exists a functor $F\colon \sg \to \cs$ sending a simple graph $(V, R)$ to 
 	The previous construction has an adjoint.
 	
 	
-\begin{lemma}
+\begin{lemma}\label{lem:adj}
 	The functor $F\colon \sg\to \cs$ is a left adjoint.
 \end{lemma}
 \begin{proof}
@@ -379,7 +385,7 @@ Let us show this:
 	\end{itemize} 
 \end{definition}
 
-\begin{remark}
+\begin{remark}\label{rem:impo}
 	We can notice the following elementary but pivotal facts:
 	\begin{enumerate}
 		\item for every simple graph $(V, R)$, the closure operator $c_R$ of $F(V, c_R)$ is additive: indeed if $\{A_i\}_{i\in I}$ is a family of subsets of $V$ with union $A$ we have:
@@ -399,7 +405,16 @@ The following are equivalent for a closure space $(X,c)$:
 \end{enumerate}
 \end{lemma}
 \begin{proof}
+	Let $F(G(X,c))$ be $(X, c_{R_c})$. We prove separately the two implications.
 	
+	\smallskip \noindent
+	$(1\Rightarrow 2).$ By the proof of \Cref{lem:adj} we know that, for every $A\subseteq X$ we have:
+	\[c_{R_c}(A) = \bigcup_{a\in A} c(\{a\})\]
+	and we can conclude by additivity.
+	
+	
+	\smallskip \noindent
+	$(2\Rightarrow 1).$ The counit $F(G(X,c))\to (X, c)$ has $\id{X}$ has underlying function, thus hypothesis $\id{X}$ also defines a continuous morphism $(X,c)\to F(G(X,c))$ and this means that $c_{R_c}\leq c$. We already know that $c\leq c_{R_c}$ and so $c=c_{R_c}$. By the first point of \Cref{rem:impo} we know that $c_{R_c}$ is additive and we can conclude. \qedhere 
 \end{proof}
 
 
@@ -412,7 +427,13 @@ The following are equivalent for a closure space $(X,c)$:
 	\end{enumerate}
 \end{lemma}
 \begin{proof}
+	Let $G(F(V,R)$ be $(V, R_{c_R})$. As before we divide the proof of the two implications.
 	
+	\smallskip \noindent
+	$(1\Rightarrow 2).$  By \Cref{rem:unit} $R_{c_R} = \Delta_V\cup R$, but if $R$ is reflexive this entails $R_{c_R}=R$.
+	
+	\smallskip \noindent
+	$(2\Rightarrow 1).$ By \Cref{rem:unit} we know that the unit of $F\dashv G$ has $\id{V}$ has underlying function. The hypothesis that this arrow $(V, R)\to (V, R_{c_R})$ is an isomorphsim entails that $R_{c_R}\subseteq R$ and so $R$ must contain $\Delta_V$. \qedhere 
 \end{proof}
 
 Putting together \Cref{lem:clos,lem:graph} we get the following result.

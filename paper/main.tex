@@ -45,7 +45,11 @@
 \newcommand{\mathscr}{\mathpzc}
 \newcommand{\vin}{\rotatebox[origin=c]{-90}{$\dashv$}}
 \newcommand{\catname}[1]{{\normalfont\textbf{#1}}}
-%\renewcommand{\cftdot}{}
+\newcommand{\fix}{\mathsf{Fix}}
+\newcommand{\avr}{\overrightarrow{\mathsf{P}}}
+\newcommand{\devr}{\overleftarrow{\mathsf{P}}}
+\newcommand{\lfp}{\mathsf{lfp}}
+\newcommand{\gfp}{\mathsf{gfp}}
 \newcommand{\slice}[2]{(\catname{#1}\downarrow{#2})}
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 \newcommand{\abs}[1]{\left\lvert#1\right\rvert}
@@ -276,15 +280,127 @@ Let us provide some examples.
 
 This section is devoted to the study of the operators that can be obtained combining the closure operaator of a given a closure space $(X,c)$ with the complete boolean algebra structure of $(\mathcal{P}(X), \subseteq)$.
 
-\begin{definition}[Backwards closure]
-	contenuto...
+\begin{definition}[Backward closure] Given a closure space $(X, c)$ we define the \emph{opposite of $c$} as:
+	\begin{align*}
+	c^{-1}\colon \mathcal{P}(X)&\to \mathcal{P}(X)\\
+	A &\mapsto \bigcup_{a\in A} \{x\in X\mid a\in c(\{x\})\}
+	\end{align*}
 \end{definition}
 
+\begin{remark}\label{rem:el0}
+By definition, $c^{-1}$ defines a monotone morphism $(\mathcal{P}(X), \subseteq)\to (\mathcal{P}(X), \subseteq)$.
+\end{remark}
+
+\begin{remark}\label{rem:el1}
+Given a set $X$, let $\eta_X\colon X\to \mathcal{P}(X)$ and $\mu_{X}\colon \mathcal{P}(\mathcal{P}(X))\to \mathcal{P}(X)$ consider the functions:
+\[\begin{split}
+	X & \to \mathcal{P}(X)\\
+	x &\mapsto \{x\}
+\end{split} \qquad \begin{split}
+\mathcal{P}(\mathcal{P}(X)) & \to \mathcal{P}(X)\\
+A &\mapsto \bigcup_{B\in A} B
+\end{split}
+\]
+
+Take now the arrow $c^*\colon \mathcal{P}(\mathcal{P}(X))\to \mathcal{P}(\mathcal{P}(X))$,
+then $c^{-1}$ coincides with $\mu_{X}\circ c^*\circ \eta_{\mathcal{P}(X)}$, i.e.~ the following diagram commutes.
+\[\xymatrix{\mathcal{P}(X) \ar[r]^{c^{-1}}\ar[d]_{\eta_{\mathcal{P}(X)}}& \mathcal{P}(X) \\\mathcal{P}(\mathcal{P}(X)) \ar[r]_{c^{*}}& \mathcal{P}(\mathcal{P}(X)) \ar[u]_{\mu_{X}}}\]
+\end{remark}
+
+\begin{remark}\label{rem:el3}
+Consider a closure space $(X,c)$ and a subset $A\subseteq X$. Then
+\[c^{-1}(A)= \{x\in X \mid c(\{x\})\cap A \neq \emptyset\}\]
+Indeed if $x\in c^{-1}(A)$ then there exists $a\in A$ such that $a\in c(\{x\})$ and so $a\in c(\{x\})\cap A$. Conversely, if $x\in X$ is such that there is an $a\in c(\{x\})\cap A$ then $x\in c^{-1}(A)$ by definition.
+\end{remark}
+
+\begin{remark}\label{rem:el2} It is worth to notice that $(X, c^{-1})$ is an additive closure space:
+	\begin{itemize}
+		\item given $A\subseteq X$, for every $a\in A$ we have $c(\{a\})\subseteq c(A)$ and $c(\{a\})$ is non-empty because it contains at least $a$, so $c(\{a\})\cap A \neq \emptyset$ and, by \Cref{rem:el3} we get that $A\subseteq c^{-1}(A)$; 
+		%\item by \Cref{rem:el2} we get $c^{-1}(\emptyset)=\emptyset$;
+		\item let $\{A_i\}_{i\in I}$ be a family of subsets of $X$ with union $A$, then:
+		\begin{align*}
+			c^{-1}(A) &= \bigcup_{a\in A}\{x\in X \mid a \in c(\{x\})\}\\&=\bigcup_{i\in I}\bigcup_{a_i\in A_i} \{x\in X \mid a_i \in c(\{x\})\}\\&=\bigcup_{i\in I}c^{-1}(A_i)
+		\end{align*}
+		showing that $c^{-1}$ is an additive closure operator.
+	\end{itemize}
+\end{remark}
+
+Finally, we can show that this construction provides us with a functor $\cs\to \cs$.
+\begin{proposition}
+	There is a functor $(-)^{\circ}\colon \cs \to \cs$ sending $(X,c)$ to $(X, c^{-1})$ and which is the identity on arrows.
+\end{proposition}
+\begin{proof}
+	Let $f$ be a morphism $(X, c)\to (Y, d)$, given $A\subseteq X$ we have to show that the image of every element of $c^{-1}(A)$ is in $d^{-1}(f_!(A))$.
+	
+	Let thus $x$ be in $c^{-1}(A)$, hence there is $a\in A$ such that $a\in c(\{x\})$ and we have
+	\begin{align*}
+		\{f(a)\}&\subseteq f_!(c(\{x\})) \\&\subseteq d(f_!(\{x\}))=d(\{f(x)\})
+	\end{align*}
+	but this now entails that $f(x)\in d(f_!(A))$ so that we can conclude.
+\end{proof}
+
+\begin{example}
+	contenuto...
+\end{example}
+\begin{example}
+	contenuto...
+\end{example}
 
 
+To proceed further we need to recall the following well known result \cite{knaster1928theoreme,tarski1955lattice}
+
+\begin{lemma}[Knaster-Tarski's Theorem]
+	Let $(P, \leq)$ be a complete poset, then every monotone morphism $f\colon (P, \leq)\to (P, \leq)$ has a least fixed point $\lfp(f)$.
+\end{lemma}
+\begin{proof}
+Consider the set
+\[A:=\{p\in P \mid f(p)\leq p\}\]
+since $(P, \leq)$ is complete we can define $\lfp(f)$ as the infimum of $A$. 
+
+To see that $\lfp(f)$ is a fixed point for $f$ we begin by noticing that for every $p\in A$ we have:
+\begin{align*}
+	f(\lfp(f)) &\leq f(p) \\&\leq p
+\end{align*}
+and so $f(\lfp(f))\leq \lfp(f)$. But this entails that $\lfp(f)$ belongs to $A$ and so $\lfp(f)=f(\lfp(f))$. \qedhere 
+\end{proof}
+
+We can use the previous result to define two new operators on a given closure space.
+
+\begin{definition} Let $(X, c)$ be a closure space, for every $A, B\in \mathcal{P}(X)$ we can define a monotone function $\Phi_{(X,c)}^{A,B}\colon (P, \leq)\to (P,\leq)$ as:
+\begin{align*}
+\Phi_{(X,c)}^{A,B}\colon (\mathcal{P}(X), \subseteq)&\to (\mathcal{P}(X), \subseteq)\\
+	Z & \mapsto c(A) \cup c(B\cup Z)
+\end{align*}
+
+The \emph{forward} and \emph{backward} operator are, respectively, the functions:
+\[
+\begin{split}
+	\avr \colon \mathcal{P}(X)\times \mathcal{P}(X) &\to \mathcal{P}(X) \\
+	(A, B)&\mapsto \lfp(\Phi_{(X,c)}^{A, B}) 
+\end{split} \qquad 
+\begin{split}
+\avr \colon \mathcal{P}(X)\times \mathcal{P}(X) &\to \mathcal{P}(X) \\
+(A, B)&\mapsto \lfp(\Phi_{(X,c)^\circ}^{A, B}) 
+\end{split}\]
+\end{definition}
+
+\begin{remark}
+	contenuto...
+\end{remark}
 
 
+We can provide a more concrete description for $\avr$ and $\devr$.
 
+\begin{proposition}
+cammini
+\end{proposition}
+\begin{proof}
+	contenuto...
+\end{proof}
+
+\begin{example}
+	contenuto...
+\end{example}
 
 \subsection{Closure spaces and simple graphs}
 
@@ -333,7 +449,6 @@ There exists a functor $F\colon \sg \to \cs$ sending a simple graph $(V, R)$ to 
 	\end{proof}
 	
 	The previous construction has an adjoint.
-	
 	
 \begin{lemma}\label{lem:adj}
 	The functor $F\colon \sg\to \cs$ is a left adjoint.

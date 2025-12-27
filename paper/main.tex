@@ -47,8 +47,10 @@
 \newcommand{\catname}[1]{{\normalfont\textbf{#1}}}
 \newcommand{\fix}{\mathsf{fix}}
 \newcommand{\mon}{\mathsf{mon}}
-\newcommand{\avr}{\overrightarrow{\mathsf{P}}}
-\newcommand{\devr}{\overleftarrow{\mathsf{P}}}
+\newcommand{\avr}{\overrightarrow{\mathsf{R}}}
+\newcommand{\devr}{\overleftarrow{\mathsf{R}}}
+\newcommand{\suc}{\mathsf{suc}}
+\newcommand{\pre}{\mathsf{pre}}
 \newcommand{\lfp}{\mathsf{lfp}}
 \newcommand{\gfp}{\mathsf{gfp}}
 \newcommand{\slice}[2]{(\catname{#1}\downarrow{#2})}
@@ -599,14 +601,146 @@ As anticipated, the functor $(-)^\circ$ is linked to the construction which send
 	\end{itemize}
 \end{proof}
 
-\begin{remark} Notice that  $G\circ (-)^\circ \circ F$ is not equal to $(-)^{\textsf{op}}$:  indeed every simple graph in the essential image of $G$ is reflexive, but $(V, R^{op})$ is reflexive if and only if $(V, R)$ is so.
-\end{remark}
+
 \begin{example}
-\Cref{ex:metric}
+	\Cref{ex:metric}
 \end{example}
 
+\begin{remark}Notice that, while $(-)^{\textsf{op}}\circ (-)^{\textsf{op}}$ is the identity on $\sg$, composing $(-)^\circ$ with itself yields $F\circ G$.
+\end{remark}
+
+\begin{remark} The composition  $G\circ (-)^\circ \circ F$ is not equal to $(-)^{\textsf{op}}$:  indeed every simple graph in the essential image of $G$ is reflexive, but $(V, R^{op})$ is reflexive if and only if $(V, R)$ is so.
+\end{remark}
+
 \subsubsection{The backward and forward operators}
-To proceed further we need to recall the following well known result \cite{knaster1928theoreme,tarski1955lattice}
+
+TO DO: blah blah qui intro
+
+\begin{definition} Let $n$ be a natual numebr, and let $S_n\subseteq n\times n$ be the \emph{successor relation} on it:
+	\[S:=\{(k,l)\in n\times n \mid l = l+1\}\]  
+and let $(n, s_n)$ be $F(n, S_n)$. A \emph{spatial path} in a closure space $(X,c)$ is a continuous morphism $(n, s_n)\to (X, c)$.
+
+Given a spatial path $(n, s_n)\to (X, c)$, we will call $p(0)$ and $p(n-1)$ the \emph{starting} and \emph{ending point} of $p$ and write $p\colon p(0) \rightsquigarrow_n p(n-1)$. 
+\end{definition}
+
+We can recast the definition of spatial paths in terms of finite sequences of points.
+
+\begin{proposition}\label{prop:equipath}
+	Let $(X, c)$ be a closure space and let $\{x_i\}_{i=0}^{n-1}$ be a sequence of points in $X$, then the following are equivalent:
+	\begin{enumerate}
+		\item there exists a spatial path $p\colon (n, s_n)\to (X, c)$ such that $p(i)=x_i$ for every $i\in n$;
+		\item for every $i\in n$ we have $x_{i+1}\in c(\{x_i\})$.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+	\begin{enumerate}
+		$(1\Rightarrow 2).$ We start by using \Cref{prop:im} to get:
+		\begin{align*}
+			p_!(s_n(\{i\}))&\subseteq c(p_!(\{i\})) \\&=c(\{p(i)\})\\&=c(\{x_i\})
+		\end{align*}
+		But by definition of $S$ we have $s_n(\{i\}) = \{i, i+1\}$ and so $x_{i+1}$ belongs to $p_!(s_n(\{i\}))$, allowing us to conclude.
+		
+		\smallskip \noindent
+		$(2\Rightarrow 1).$ We have to check that the function 
+	\begin{align*}
+		p \colon n &\to X\\
+		i &\mapsto x_i
+	\end{align*}
+	is continuous. Let $A$ be a subset of $n$, then
+	\[s_n(A)= A \cup \bigcup_{a\in A}\{i \in n\mid i= a+1\}\]
+	Thus we have
+	\begin{align*}
+p_!(c_S(A)) &= p_!(A)\cup \bigcup_{a\in A}\{x \in X\mid  x=x_{a+1}\}\\&\subseteq \bigcup_{a\in A} c(\{x_a\}) \\&\subseteq c(\bigcup_{a\in A}\{x_a\})\\&= c(p_!(A))
+	\end{align*}
+
+	\end{enumerate}
+\end{proof}
+
+\begin{remark}\label{rem:grpath}
+Consider the closure space $F(V, R)$ associated to the simple graph $(V, R)$, then a spatial path is simply a finite sequence of vertices $\{v_i\}_{i=0}^{n-1}$ such that $(v_i, v_{i+1})\in R\cup \Delta_V$.
+\end{remark}
+
+\begin{example}
+	fai esempio con i delta
+\end{example}
+
+So equipped we can now define two new operators which captures the meaning of being able to reach, or being reached from, a certain region, remaining in another given one.
+
+\begin{definition}[\cite{bussi2023spatial}] Let $(X, c)$ be a closure space, given two subsets $A, B\in \mathcal{P}(X)$, we define
+	\begin{align*}
+		\avr_c(A,B)&:=\{x\in X \mid \text{ there exists } p\colon x \rightsquigarrow_{n+1} y \text{ such that } y\in A \text{ and } p_!(\{x_i\}_{i=1}^{n-1}) \subseteq B \} \\
+		\devr_c(A,B)&:=\{x\in X \mid \text{ there exists } p\colon y \rightsquigarrow_{n+1} x \text{ such that } y\in A \text{ and } p_!(\{x_i\}_{i=1}^{n-1}) \subseteq B \}
+	\end{align*}
+	
+	We then define the \emph{forward} and \emph{backward reachability} operators as the functions:
+	\[
+	\begin{split}
+		\avr \colon \mathcal{P}(X)\times \mathcal{P}(X) &\to \mathcal{P}(X) \\
+		(A, B)&\mapsto \avr(A,B) 
+	\end{split} \qquad 
+	\begin{split}
+		\devr \colon \mathcal{P}(X)\times \mathcal{P}(X) &\to \mathcal{P}(X) \\
+		(A, B)&\mapsto \devr(A,B) 
+	\end{split}\]
+\end{definition}
+
+\begin{example}
+	
+	fai esempio con un grafo
+\end{example}
+\begin{remark}\label{rem:prop}
+	Consider a closure space $(X, c)$ and $A\subseteq X$. Suppose that $p\colon x\rightsquigarrow_{n+1} y$ witnesses that $x$ belongs to $\suc(A)$. Then $n$ must be necessarily $0$ and 
+	
+	
+	Similarly
+	
+	nei grafi sono proprio next e pre
+\end{remark}
+
+\begin{remark}\label{rem:dual}
+	Let $(X,c)$ be a closure space, then $\devr_c = \avr_{c^{-1}}$. To see this we can start by noticing that for every spatial path $p\colon x\rightsquigarrow_n y$ we can define
+	\begin{align*}
+		p^{-1} \colon n &\to X\\
+		i & \mapsto p((n-1)-i)
+	\end{align*} 
+	to get a spatial path $y\rightsquigarrow_n x$ in $(X, c^{-1})$. Indeed, consider the sequence $\{p^{-1}(i)\}_{i=0}^{n-1}$. By \Cref{prop:equipath} we know that $p(i+1)$ belongs to $c(\{p(i)\})$ for every $i\in n$, but:
+	\[c(\{p^{-1}(i+1)\})=c(\{p(n-1-i-1)\})\]
+	
+	We conclude again appealing to \Cref{prop:equipath}.
+	
+	consider two subsets $A, B\in \mathcal{P}(X)$ and let us split the cases.
+	\begin{itemize}
+		\item $\devr_c(A,B) \subseteq \avr_{c^{-1}}(A,B)$. Let $p\colon x \rightsquigarrow_{n+1} y$ be a path witnessing that $x$ belong to $\devr_c(A,B)$. Define
+		\begin{align*}
+		 q \colon n+2 &\to X\\
+		 	i & \mapsto p((n+1)-i)
+		\end{align*} 
+		
+		Notice that $a$
+		\item 
+	\end{itemize}
+\end{remark}
+
+\begin{remark}\label{rem:difbus}
+	contenuto...
+\end{remark}
+
+We are now going to give a semantics to $\avr$ and $\devr$ which doesn't rely on points and paths. A first step is given by the following lemma.
+
+\begin{lemma}\label{lem:util}
+Let $(X,c)$ be a closure spaces, then for every $A, B\subseteq X$ we have:
+\begin{enumerate}
+\item $\avr_c(A,B)=c^{-1}(A)\cup c^{-1}(B\cap \avr_c(A,B))$;
+\item $\devr_c(A,B)=c(A)\cup c(B\cap \devr_c(A,B))$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+	\begin{enumerate}
+		\item 
+		\item This follows at once from the previous point and \Cref{rem:dual}.
+	\end{enumerate}
+\end{proof}
+In order to proceed further we need to recall the following well known result \cite{knaster1928theoreme,tarski1955lattice}
 
 \begin{lemma}[Knaster-Tarski's Theorem]\label{lem:KT}
 	Let $(P, \leq)$ be a complete poset, then every monotone morphism $f\colon (P, \leq)\to (P, \leq)$ has a least fixed point $\lfp(f)$ which is also the minimum of the set
@@ -636,15 +770,15 @@ We can use the previous result to define two new operators on a given closure sp
 	Z & \mapsto c(A) \cup c(B\cup Z)
 \end{align*}
 
-The \emph{forward} and \emph{backward} operator are, respectively, the functions:
+The \emph{forward} and \emph{backward} operator are, respectively,  the functions:
 \[
 \begin{split}
 	\avr \colon \mathcal{P}(X)\times \mathcal{P}(X) &\to \mathcal{P}(X) \\
 	(A, B)&\mapsto \lfp(\Phi_{(X,c)}^{A, B}) 
 \end{split} \qquad 
 \begin{split}
-\devr \colon \mathcal{P}(X)\times \mathcal{P}(X) &\to \mathcal{P}(X) \\
-(A, B)&\mapsto \lfp(\Phi_{(X,c)^\circ}^{A, B}) 
+	\devr \colon \mathcal{P}(X)\times \mathcal{P}(X) &\to \mathcal{P}(X) \\
+	(A, B)&\mapsto \lfp(\Phi_{(X,c)^\circ}^{A, B}) 
 \end{split}\]
 \end{definition}
 
@@ -657,27 +791,12 @@ The \emph{forward} and \emph{backward} operator are, respectively, the functions
 	and we get the wanted inequalities from \Cref{rem:fix_mon}.
 \end{remark}
 
-
-We can provide a more concrete description for $\avr$ and $\devr$.
-
-\begin{lemma}\label{lem:util}
-	contenuto...
-\end{lemma}
-\begin{proof}
-	contenuto...
-\end{proof}
-
 \begin{proposition}\label{prop:cam}
 cammini
 \end{proposition}
 \begin{proof}
 	contenuto...
 \end{proof}
-
-\begin{example}
-	contenuto...
-\end{example}
-
 
 \section{Sheaves of closure spaces}
 

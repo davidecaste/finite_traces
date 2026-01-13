@@ -80,8 +80,17 @@
 
 \newcommand{\acs}{\catname{aCS}}
 \newcommand{\cs}{\catname{CS}}
+\newcommand{\ecs}{\catname{eCS}}
+\newcommand{\eacs}{\catname{eaCS}}
+\newcommand{\ics}{\catname{sCS}}
+\newcommand{\tcs}{\catname{tCS}}
+\newcommand{\iacs}{\catname{saCS}}
 \newcommand{\sg}{\catname{SGraph}}
-\newcommand{\rsg}{\catname{rSGraph}}
+\newcommand{\rsg}{\catname{Refl}}
+\newcommand{\tsg}{\catname{Trans}}
+\newcommand{\pro}{\catname{Pre}}
+\newcommand{\al}{\catname{Ale}}
+\newcommand{\tacs}{\catname{taCS}}
 \newcommand{\co}[1]{\{\abs{#1}\}}
 \newcommand{\eq}[3]{[#1 = #2]_{#3}}
 \newcommand{\equ}[2]{[#1 \equiv #2]}
@@ -226,30 +235,24 @@
 	by the PRIN 20228KXFN2 ``Spatio-Temporal Enhancement of Neural nets for Deeply Hierarchical Automatised Logic'' (STENDHAL),
 	funded by NextGenerationEU.
 \end{credits}
+
 \section{Introduction}
 TO DO: vendere 'sta roba
 
-\section{Closure spaces}
-In this section we recall the definition and first properties of \emph{closure spaces} \cite{ciancia2016spatial,ciancia2014specifying,bussi2023spatial}. For a more abstract approach to the subject of closure operators we refer the interested reader to \cite{dikranjan2013categorical}.
+\section{Closure operators, topological spaces and simple graphs}
 
+In this section we recall the definition and first properties of \emph{closure spaces} and explore the relationship of the resulting structures with simple graphs and topological spaces \cite{bussi2023spatial,ciancia2016spatial,ciancia2014specifying}. 
 
 \begin{definition}
-A \emph{closure operator} on a set $X$ is  a monotone function $c\colon (\mathcal{P}(X), \subseteq )  \to (\mathcal{P}(X), \subseteq)$ such that:
-\begin{enumerate}
-	\item $c$ is \emph{expansive}: $\id{\mathcal{P}(X)}\leq c$;
-	\item $c$ preserves finite unions.
-\end{enumerate}
-
+A \emph{closure operator} on a set $X$ is  a monotone function $c\colon (\mathcal{P}(X), \subseteq )  \to (\mathcal{P}(X), \subseteq)$ preserving finite suprema.
 A \emph{closure space} is a pair $(X, c)$ given by a set and a closure operator on it.
 
 A \emph{continuous morphism} between two closure spaces $(X, c)\to (Y, d)$ is a function $f\colon X\to Y$ such that:
 \[c\circ f^* \leq f^*\circ d\]
- where $f^*\colon (\mathcal{P}(Y), \subseteq)\to (\mathcal{P}(X), \subseteq)$ assigns to a set its preimage.
-
-We will denote by $\cs$ the category so obtained.
+ where $f^*\colon (\mathcal{P}(Y), \subseteq)\to (\mathcal{P}(X), \subseteq)$ assigns to a set its preimage. We will denote by $\cs$ the category so obtained.
 \end{definition}
 
-The preimage morphism $f^*\colon (\mathcal{P}(Y), \subseteq)\to (\mathcal{P}(X), \subseteq)$ preserves arbitrary meets and so, by Freyd's adjoint functor theorem \cite{freyd2003abelian,dikranjan2013categorical}, it has a left adjoint $f_! \colon (\mathcal{P}(X), \subseteq)\to (\mathcal{P}(Y), \subseteq)$ assigning to $A\subset X$ its image through $f$.
+The preimage morphism $f^*\colon (\mathcal{P}(Y), \subseteq)\to (\mathcal{P}(X), \subseteq)$ preserves arbitrary meets and so, by Freyd's adjoint functor theorem \cite{freyd2003abelian,dikranjan2013categorical}, it has a left adjoint $f_! \colon (\mathcal{P}(X), \subseteq)\to (\mathcal{P}(Y), \subseteq)$ assigning to $A\subseteq X$ its image through $f$.
 
 
 \begin{proposition}\label{prop:im}
@@ -270,70 +273,10 @@ The preimage morphism $f^*\colon (\mathcal{P}(Y), \subseteq)\to (\mathcal{P}(X),
 	\begin{align*}c\circ f^*&\leq f^*\circ f_! \circ c \circ f^*  \\&\leq f^* \circ d\circ f_!\circ f^* \\&\leq f^*\circ d
 	\end{align*}
 	proving that $f$ is continuous. \qedhere 
+	\end{proof}
 	
-\end{proof}
-
-We are now going to provide some examples of closure spaces. We begin with topological spaces:
-\begin{proposition}
-Let $\topo$ be the category of topological spaces and continuous maps. The following are true:
-\begin{enumerate}
-	\item there is a functor $T\colon \topo\to \cs$ which is the identity on arrows and sends a space $(X, \mathcal{O})$ to $(X, c_{\mathcal{O}})$, where
-\begin{align*}c_{\mathcal{O}}\colon (\mathcal{P}(X), \subseteq) &\to (\mathcal{P}(X), \subseteq)\\ A &\mapsto \inf(\{C\in \mathcal{P}(X) \mid C \text{ is closed and } A\subseteq C\})
-\end{align*}
-	\item a closure space $(X,c)$ is in the essential image of $T$ if and only if it is \emph{idempotent}, i.e.~ if $c\circ c =c$.
-\end{enumerate}
-\end{proposition}
-\begin{proof} \begin{enumerate}
-		\item We only have to show that $(X, c_{\mathcal{O}})$ is a closure spaces. Clearly $c_{\mathcal{O}}$ is monotone, let us show that it preserves finite unions.
-		\begin{itemize}
-			\item since $\emptyset$ is closed we immediately have that $c_{\mathcal{O}}(\emptyset)=\emptyset$;
-			\item take $A, B\in \mathcal{P}(X)$, since $c_{\mathcal{O}}$ is monotone then we know that 
-			\[c_{\mathcal{O}}(A)\cup c_{\mathcal{O}}(B) \subseteq c_{\mathcal{O}}(A\cup B)\]
-		Now, $c_{\mathcal{O}}(A)\cup c_{\mathcal{O}}(B)$, being the finite union of intersections of closed sets, is a closed set, and it contains $A\cup B$ and so also the other inclusion holds.
-		\end{itemize}
-		\item By definition $c_{\mathcal{O}}(A)$ is a closed set for every $A\in \mathcal{P}(X)$ and so $c_{\mathcal{O}}$ is idempotent. It is thus enough to show that every $(X,c)$ with $c$ idempotent is isomorphic to $(X, \mathcal{O})$ for some topological space $(X, \mathcal{O})$. Define:
-		\[\mathcal{O}_c:=\{A\subseteq X \mid A= X\smallsetminus c(B) \text{ for some $B$ in $\mathcal{P}(X)$}\}\]
-		
-		It's easy to see that $\mathcal{O}_c$ is a topology on $X$:
-		\begin{itemize}
-			\item $\emptyset$ and $X$ belong to $\mathcal{O}_c$: indeed 
-			\[\emptyset = X\smallsetminus c(X) \qquad X = X \smallsetminus c(\emptyset)\] 
-			\item let $A_1$ and $A_2$ be elements in $\mathcal{O}_c$, by definition there are $B_1,B_2\in \mathcal{P}(X)$ such that 
-			\[A_1=X\smallsetminus c(B_1)\qquad A_2 = X \smallsetminus c(B_2)\]
-			therefore we have:
-			\begin{align*}
-				A_1\cap A_2 &= X\smallsetminus c(B_1) \cap X \smallsetminus c(B_2)\\&=
-			X \smallsetminus (c(B_1)\cup c(B_2))\\&= X \smallsetminus (c(B_1\cup B_2 ))
-			\end{align*}
-			proving that $A_1\cap A_2$ belongs to $\mathcal{O}_c$. 
-			\item  Let $\{A_i\}_{i\in I}$ be a family of elements of $\mathcal{O}_c$ and let also $\{B_i\}_{i\in I}$ be a family of elements such that
-			\[A_i= X\smallsetminus c(B_i)\]
-			Since $c$ is monotone and idempotent we have:
-			\begin{align*}
-				c(\bigcap_{i\in I} c(B_i)) &\subseteq \bigcap_{i\in I} c(c(B_i)) \\&= \bigcap_{i\in I}c(B_i)
-			\end{align*}
-			Since the other inclusione is guaranteed by expansivity of $c$ we get:
-		\begin{align*}
-			\bigcup_{i\in I} A_i&=\bigcup_{i\in I} (X\smallsetminus c(B_i)) \\&= X \smallsetminus \bigcap_{i\in I} c(B_i)\\&= X \smallsetminus c(\bigcap_{i\in I} c(B_i)) 
-		\end{align*}
-		which proves that $\mathcal{O}_c$ is closed under arbitrary unions.
- 		\end{itemize}
-		
-		To conclude it is now enough to prove that $c_{\mathcal{O}_c}$ is equal to $c$. Notice that, by definition, $C$ is closed in the topology $\mathcal{O}_c$ if and only if it lies in the image of $c$, thus we have:
-		\begin{align*}
-			c_{\mathcal{O}_c}(A)=\inf \{c(B)\in \mathcal{P}(X) \mid A \subseteq c(B)\}
-		\end{align*}
-		This entails immediately that $c_{\mathcal{O}_c}(A)\subseteq c(A)$. On the other hand, if $A\subseteq c(B)$ for some $B\in \mathcal{P}(X)$ then
-		\begin{align*}
-			c(A)&\subseteq c(c(B))\\&=c(B)
-		\end{align*}
-		and so $c(A)\subseteq 	c_{\mathcal{O}_c}(A)$ as wanted.	\qedhere 
-	\end{enumerate}
-\end{proof}
-
-\subsection{Closure spaces and simple graphs}
-
-In this section we are going to explore the relationship between closure spaces and simple graphs. The latter are in fact equivalent to the subcategory of $\cs$ given by spaces whose closure operatore preserves arbitrary suprema.
+\subsection{Closure spaces and simple graphs}	
+The notion of closure space is intimately related to that of \emph{simple graphs}. The latter are in fact equivalent to the subcategory of $\cs$ given by spaces whose closure operator preserves arbitrary suprema.
 
 \begin{definition}
 	A \emph{simple graph} is a pair $(V, R)$ where $V$ is a set of \emph{nodes} and $R$ a subset of $V\times V$. A morphism $(V, R)\to (W, S)$ is a function $f\colon V\to W$ such that there exists $\hat{f}\colon R\to S$ fitting in the diagram below, where the vertical arrows are inclusions.
@@ -342,18 +285,17 @@ In this section we are going to explore the relationship between closure spaces 
 \end{definition}
 
 \begin{remark}\label{rem:elem}
-	Notice that a function $f\colon V\to W$ defines a morphism  $(V, R)\to (W, S)$ if and only if $(f(x), f(y))$ is in $S$ for every pair $(x, y)\in R$.
+	In more elementary terms, a function $f\colon V\to W$ defines a morphism  $(V, R)\to (W, S)$ if and only if $(f(x), f(y))$ is in $S$ for every pair $(x, y)\in R$.
 \end{remark}
 
-
-Our interest in simple graphs lies in the fact that the provides examples of closure spaces, as shown by the following definition.
+We begin to investigate the relationship by noticing that every simple graph has an associated closure space.
 
 \begin{definition}\label{ex:graph}
 	Let $(V, R)$ be a simple graph, for every $v\in V$ we put
 	\[R_v:=\{w\in V \mid (v, w)\in R\}\]
 	Then we define  $F(V, R)$ as $(V, c_{R})$ where
 	\begin{align*}c_R\colon \mathcal{P}(V)&\to \mathcal{P}(V)\\
-		A &\mapsto A \cup \bigcup_{a\in A} R_a
+		A &\mapsto \bigcup_{a\in A} R_a
 	\end{align*}
 \end{definition}
 
@@ -361,14 +303,14 @@ Our interest in simple graphs lies in the fact that the provides examples of clo
 	$F(V,R)$ is a closure space for every simple graph $(V, R)$.
 \end{proposition}
 \begin{proof}
-	Monotonicity and expansivity of of $c_R$ follow at once from the definition. Finally, $c_R(\emptyset) = \emptyset$ since the empty union is $\emptyset$, while,  given $A, B\subseteq V$, we have: 
+	Monotonicity of $c_R$ follows at once from the definition. Since the empty union is empty we have $c_R(\emptyset) = \emptyset$. Finally, given $A, B\subseteq V$, we have: 
 	\begin{align*}
-		c_R(A\cup B) &=A \cup \bigcup_{a\in A \cup B} R_a \\&= A\cup B \bigcup_{a\in A} R_a \cup \bigcup_{b\in B} R_b \\&= (A \cup \bigcup_{a\in A} R_a ) \cup (B \cup \bigcup_{b\in B} R_b )\\&= c_R(A)\cup c_R(B)
+		c_R(A\cup B) &=\bigcup_{a\in A \cup B} R_a \\&= \bigcup_{a\in A} R_a \cup \bigcup_{b\in B} R_b \\&=  c_R(A)\cup c_R(B)
 	\end{align*}
 	and we can conclude. \qedhere 
 \end{proof}
 
-The previous proposition provides us with a non topological example of closure space.
+The previous proposition provides us with an example of closure space.
 
 \begin{example}\label{ex:metric}
 	Let $(X, d)$ be a metric space and consider a positive real number $\delta$. We can define a relation on $X$ putting
@@ -378,10 +320,6 @@ The previous proposition provides us with a non topological example of closure s
 	\begin{align*}
 		c_{d, \delta}\colon \mathcal{P}(X)&\to \mathcal{P}(X)\\A &\mapsto \bigcup_{a\in A} B_d(a, \delta)
 	\end{align*}
-
-We can also notice that $c_{d, \delta}$ is, in general, not idempotent: consider $(\mathbb{R}, d_E)$, the real line equipped with the euclidean distance, we have:
-\[c_{d_E, \delta}(\{0\}) = B(0, \delta) \qquad c_{d_E, \delta}(c_{d_E, \delta}(\{0\}))= B(0, 2\delta)\]
-and if $\delta \neq 0$ these two sets are different.
 \end{example}
 
 We can promote the construction of \Cref{ex:graph} to a functor $\sg \to \cs$.
@@ -390,7 +328,7 @@ We can promote the construction of \Cref{ex:graph} to a functor $\sg \to \cs$.
 	There exists a functor $F\colon \sg \to \cs$ sending a simple graph $(V, R)$ to $F(V, R)$ and which is the identity on arrows.
 \end{proposition} 
 \begin{proof}
-	We just have to check that a morphism $f\colon (V, R)\to (W, S)$ induces a continuous morphism $(V, c_R)\to (W, c_S)$.  For every subset $A$ of $W$, let $v$ be an element of $c_R(f^*(A))$. Then there exist $a\in f^*(A)$ such that $(a, v)\in R$. By \Cref{rem:elem} we know that $f(v)$ belongs to $S_{f(a)}$. Thus $f(v)$ is in $c_S(A)$ and so, since $f(a)\in A$, this allows us to conclude.
+	We just have to check that a morphism $f\colon (V, R)\to (W, S)$ induces a continuous morphism $(V, c_R)\to (W, c_S)$.  For every subset $A$ of $W$, let $v$ be an element of $c_R(f^*(A))$. Then there exist $a\in f^*(A)$ such that $(a, v)\in R$. By \Cref{rem:elem} we know that $f(v)$ belongs to $S_{f(a)}$. Thus $f(v)$ is in $c_S(\{f(a)\})$ and, since $f(a)\in A$, we can conclude. \qedhere 
 \end{proof}
 
 The functor of \Cref{prop:funct} is a left adjoint.
@@ -404,57 +342,117 @@ The functor of \Cref{prop:funct} is a left adjoint.
 	
 	Now, for every closure space $(X,c)$ we have $F(G(X,c)) = (X, c_{R_c})$ where, for every $A\subseteq X$ we have
 	\begin{align*}
-		c_{R_c}(A)&= A\cup \bigcup_{a\in A} \{x\in X \mid (a,x)\in R_c\}\\&= A\cup  \bigcup_{a\in A} \{x\in X \mid x\in c(\{a\})\}\\&=A\cup  \bigcup_{a\in A} c(\{a\}) \\&= \bigcup_{a\in A} c(\{a\})
+		c_{R_c}(A)&= \bigcup_{a\in A} \{x\in X \mid (a,x)\in R_c\}\\&= \bigcup_{a\in A} \{x\in X \mid x\in c(\{a\})\}\\&= \bigcup_{a\in A} c(\{a\})
 	\end{align*}
-	where the last identity follows from the fact that, for every $a\in A$, $a\in c(\{a\})$.
 	
-	Now, since $c$ is monotone then
+	Now, since $c$ is monotone we have
 	\begin{align*}
 		c_{R_c}(A) &=\bigcup_{a\in A} c(\{a\}) \\&\subseteq c(\bigcup_{a\in A}\{a\})\\&=c(A)   
 	\end{align*}
 	
-	Thus $\id{X}$ is a continuous morphism $(X,  c_{R_c})\to (X, c)$. Let $f\colon F(V, R)\to (X, c)$ be an arrow in $\cs$, if we show that $f$ is a morphism of simple graphs between $(V, R)\to (X, R_c)$ we are done.
+	The last inequality entails that $\id{X}$ is a continuous morphism $(X,  c_{R_c})\to (X, c)$. To see that this arrow has the universal property of a counit it is now enough to show that for every  $f\colon F(V, R)\to (X, c)$ in $\cs$, $f$ itself defines a morphism of simple graphs between $(V, R)\to (X, R_c)$.
 	
-	Let $(v,w)$ be an element of $R$, we have to show that $f(w)\in c(\{f(v)\})$. Now, by definition $w\in c_R(\{v\})$, thus by \Cref{prop:im}
+	To do this, we have to show that $f(w)\in c(\{f(v)\})$ for every element $(v,w)$ of $R$. Now, by definition, $w\in c_R(\{v\})$ thus \Cref{prop:im} entails
 	\begin{align*}
 		\{f(w)\} &= f_!(\{w\}) \\&\subseteq f_!(c_R(\{v\}))\\& \subseteq c(f_{\!}(\{v\}))
 	\end{align*}
 	and we can conclude. \qedhere
 \end{proof}
 
-\begin{remark}\label{rem:unit}  We can also compute the unit of the adjunction $F\dashv G$.  Given a simple graph $(V, R)$, we can notice that $G(F(V, R))=(V, R_{c_R})$ 	with $R\subseteq R_{c_R}$. To see this, notice that $R_{c_R}$ is the union of  $R$ and the diagonal $\Delta_V$, where:
-	\[\Delta_V := \{(v,w)\in V\times V\mid v = w\}\]
-	
-	Let us show this:
+\begin{example}\label{ex:cont}
+In the proof of \Cref{lem:adj} we have shown that, for every closure space $(X,c)$, $c_{R_c}\subseteq c$. This inequality is in general strict. To see this, consider $X:=\mathbb{N} \cup \{\infty\}$ and define:
+	\begin{align*}c\colon \mathcal{P}(X)&\to \mathcal{P}(X)\\
+	A & \mapsto \begin{cases}
+		\emptyset & A = \emptyset\\
+		\mathbb{N} & A \subsetneq \mathbb{N}\\
+		X & \text{otherwise}\\
+	\end{cases}
+\end{align*}
+
+Let us show that in this way we get a closure operator.
+\begin{itemize}
+	\item $c$ is monotone. Suppose that $A\subseteq B$, we have three cases:
 	\begin{itemize}
-		\item let $(v,w)$ be an element of $R\cup \Delta_V$, on the one hand if $v\neq w$ then there is nothing to prove, on the other hand if $v=w$ then $w \in \{v\}$ which is contained in $c_R(\{v\})$ and so $(v,w)$ belongs to $R_{c_R}$;
-		\item let now $(v,w)$ be a pair in $R_{c_R}$, then $w\in \{v\}\cup R_v$, if $w\in \{v\}$ then $w=v$ and so $(v,w)\in \Delta_V$, while if $w\in R_v$ then $(v,w)\in R$ by definition.
+		\item if $\infty$ is neither in $A$ nor in $B$ then we have two subcases:
+		\begin{itemize}
+			\item if $A$ is empty then $c(A)=\emptyset$ is contained in $c(B)$;
+			\item if $A$ is non-empty then also $B$ contains at least one element and so $c(A)$ and $c(B)$ are both $\mathbb{N}$;
+		\end{itemize}
+		\item if $\infty$ is in $A$ then it is also in $B$ and $c(A)$ and $c(B)$ are both equal to $X$;
+		\item if $\infty$ is in $B$ but not in $A$ then $c(B)$ is $X$ which surely contains $c(A)$.
 	\end{itemize}
+		\item Preservation of $\emptyset$ holds by definition.
+	\item $c$ preserves binary unions. Let $A$ and $B$ be subsets of $X$. We have two cases:
+	\begin{itemize}
+		\item suppose that $A$ and $B$ are strictly contained in $\mathbb{N}$, then also $A\cup B$ is so, now:
+		\begin{itemize}
+			\item if $A$ and $B$ are both empty then $A\cup B=\emptyset$ and there is nothing to prove;
+			\item if $A$ or $B$ contains one element then $A\cup B$ is non-empty and $c(A\cup B)=\mathbb{N}$, but by hypothesis at least one between $c(A)$ or $c(B)$ is $\mathbb{N}$. 
+		\end{itemize}
+			
+		\item Suppose that at least one of $A$ and $B$ is not strictly contained in $\mathbb{N}$, then $A\cup B$ cannot be a proper subset of $\mathbb{N}$ and so $c(A\cup B)=X$, but at least one of $c(A)$ and $c(B)$ is $X$ and so the thesis follows.
+	\end{itemize}
+\end{itemize}
+
+Now, for every $x\in X$ we have:
+\[c(\{x\})=\begin{cases}
+	\mathbb{N} & \{x\} \in \mathbb{N}\\
+	X & x = \infty 
+\end{cases})\]
+and so 
+\[R_c = (\mathbb{N}\times \mathbb{N}) \cup (\{\infty\}\times X)\] 
+But then $c_{R_c}(\mathbb{N}) = \mathbb{N}$ which is strictly contained in $c(\mathbb{N})$.
+\end{example}
+
+\iffalse 
+\begin{example}
+	In the proof of \Cref{lem:adj} we have shown that, for every closure space $(X,c)$, $c_{R_c}\subseteq c$. This inequality is in general strict. To see this, let $(\mathbb{N}, \mathsf{s})$ be $F(\mathbb{N}, \mathsf{succ})$, where
+	\[\mathsf{succ} = \Delta_\mathbb{N} \cup \{(n, m)\in \mathbb{N}\times \mathbb{N} \mid m = n+1\}\] 
+	We can consider the coproduct $(X, \{\iota_i\}_{i=0}^1)$ of $\mathbb{N}$ and $\{\infty\}$ and define
+	\begin{align*}c\colon \mathcal{P}(X)&\to \mathcal{P}(X)\\
+		A & \mapsto \begin{cases}
+		\iota_0(\mathsf{s}(A')) & A=\iota_0(A')	\text{ for some finite } A'\subseteq \mathbb{N}\\
+		\iota_0(\mathsf{s}(A')) \cup \{\iota_1(\infty)\} & A=\iota_0(A')	\text{ for some infinite } A'\subseteq \mathbb{N}\\
+		\iota_0(\mathsf{s}(A')) \cup \{\iota_1(\infty)\} & A=\iota_0(A') \cup \{\iota_1(\infty)\} \text{ for some} A'\subseteq \mathbb{N}\\
+		\end{cases}
+	\end{align*}
 	
-	Thus $\id{V}$ is a morphism $(V, R)\to (V, R_{c_R})$. Consider an arrow $f\colon (V, R)\to G(X, c)$ for some $(X, c)\in \cs$. Then $f\colon V\to X$ defines a morphism $F(V, R)\to (X,c)$: let $A$ be a subset of $X$, and $v$ an element of  $c_R(f^*(A))$, then there exists $a\in f^*(A)$ such that $(a, v)\in R$. By \Cref{rem:elem} we know that $(f(a), f(v))$ is in $R_c$ but then $f(v)$ must belong to $c(\{f(a)\})$ and so to $c(A)$.  Thus $v\in f^*(c(A))$ and we are done.
+	Now, $G(X,c)$ is the simple graph $(X, R_c)$ where
+	\[R_c=(\iota_0\times \iota_0)_!(\mathsf{succ}) \cup \{(\infty, \infty)\}\]
+	Thus we have:
+	\begin{align*}c_{R_c}(\iota_0(\mathbb{N})) &= c_{R_c}(\bigcup_{n\in \mathbb{N}} \{\iota_0(n)\})\\&= \bigcup_{n\in \mathbb{N}} c_{R_c}(\{\iota_0(n)\}) \\&= \bigcup_{n\in \mathbb{N}} \{n, n+1\}\\&= \iota_0(\mathbb{N})
+		\end{align*}
+	But by definition $c(\iota_0(\mathbb{N}))= X$.
+\end{example}\fi 
+
+\begin{remark}\label{rem:unit} 
+	In the proof of \Cref{lem:adj} we have showd that $\id{X}\colon F(G(X,c))\to (X,c)$ is the component of the counit of $F\dashv G$ at $(X,c)$. We want now to compute the unit. 
+	
+	We can begin by noticing that, for every simple graph $(V,R)$,  $G(F(V,R))$ coincides with $(V, R)$. Indeed:
+	\begin{align*}
+	R_{c_R} &= \{(x,y)\in X\times X \mid y \in c_R(\{x\})\} \\&= \{(x,y)\in X\times X \mid y \in R_x\}\\&= \{(x,y)\in X\times X \mid (x,y)\in R\}\\&= R
+		\end{align*}
+	
+ To see that $\id{(V,R)}$ is the unit of the adjunction $F\dashv G$, we have to show that for every arrow $f\colon (V, R)\to G(X, c)$, with $(X, c)$ a closure space, the function $f\colon V\to X$ defines a morphism $F(V, R)\to (X,c)$.  Take a subset $A$ of $X$, for every $v\in c_R(f^*(A))$, there exists $a\in f^*(A)$ such that $(a, v)\in R$. By \Cref{rem:elem} we know that $(f(a), f(v))$ is in $R_c$ and so $f(v)$ belongs to $c(\{f(a)\})$. But $f(a)\in A$ and so $c(\{f(a)\})\subseteq c(A)$, entailing $v\in f^*(c(A))$ as wanted.
 \end{remark}
 
-We are now going to characterize the fixed points of the adjunction $F\dashv G$.
+Our next step is to characterize the fixed points of the adjunction $F\dashv G$ just built. Clearly \Cref{rem:unit} entails that the unit $\id{\sg}\to G\circ F$  is an isomorphism and so $F$ is full and faithful. We are thus left with the characterization of the closure spaces whose counit's component is an isomorphism.
 
 \begin{definition}
-	Given a closure space $(X, c)$ and a simple graph $(V, R)$, we say that:
-	\begin{itemize}
-		\item $c$ is \emph{additive} if $c$ preserves arbitrary unions, we will denote by $\acs$ the full subcategory of $\cs$ given by closure spaces with additive closure operators.
-		
-		\item $R$ is \emph{reflexive} if the diagonal $\Delta_V$ is contained in $R$, we will denote by $\rsg$ the full subcategory of $\sg$ given by simple graphs $(V, R)$ with $R$ reflexive.
-	\end{itemize} 
+	Given a closure space $(X, c)$ and a simple graph $(V, R)$, we say that
+	$c$ is \emph{additive} if $c$ preserves arbitrary unions, we will denote by $\acs$ the full subcategory of $\cs$ given by closure spaces with additive closure operators. 
 \end{definition}
 
 \begin{remark}\label{rem:impo}
-	We can notice the following elementary but pivotal facts:
-	\begin{enumerate}
-		\item for every simple graph $(V, R)$, the closure operator $c_R$ of $F(V, c_R)$ is additive: indeed if $\{A_i\}_{i\in I}$ is a family of subsets of $V$ with union $A$ we have:
+ For every simple graph $(V, R)$, the closure operator $c_R$ of $F(V, c_R)$ is additive: indeed if $\{A_i\}_{i\in I}$ is a family of subsets of $V$ with union $A$ we have:
 		\begin{align*}
 			c_R(A) &= A \cup \bigcup_{a\in A} R_a \\&= A\cup \bigcup_{i\in I} \bigcup_{b_i\in A_i} R_{b_i} \\&=\bigcup_{i\in I} A_i \cup \bigcup_{i\in I} \bigcup_{b_i\in A_i} R_{b_i} \\&=  \bigcup_{i\in I}( A\cup \bigcup_{b_i\in A_i} R_{b_i} )\\&= \bigcup_{i\in I} c_R(A_i)
 		\end{align*}
-		\item for every closure space $(X, c)$, $G(X,c)$ is in $\rsg$: indeed if $G(X, c)=(X, R_c)$, then for every $x\in X$ we know that $\{x\}\subseteq c_R(\{x\})$ and so $(x,x)$ belongs to $R_c$.
-	\end{enumerate}
 \end{remark}
+
+\begin{remark} Let $(X, c)$ with $X$ finite, from the fact that $c$ preserves finite unions follows that $c$ is additive.
+\end{remark}
+The notion of additivity provides the wanted characterization.
 
 \begin{lemma}\label{lem:clos}
 	The following are equivalent for a closure space $(X,c)$:
@@ -469,55 +467,257 @@ We are now going to characterize the fixed points of the adjunction $F\dashv G$.
 	\smallskip \noindent
 	$(1\Rightarrow 2).$ By the proof of \Cref{lem:adj} we know that, for every $A\subseteq X$ we have:
 	\[c_{R_c}(A) = \bigcup_{a\in A} c(\{a\})\]
-	and we can conclude by additivity.
-	
+	but by additivity the right-hand side of the previous equation is $c(A)$ and we can conclude.
 	
 	\smallskip \noindent
 	$(2\Rightarrow 1).$ The counit $F(G(X,c))\to (X, c)$ has $\id{X}$ has underlying function. By hypothesis $\id{X}$ also defines a continuous morphism $(X,c)\to F(G(X,c))$ and this means that $c_{R_c}\leq c$. We already know that $c\leq c_{R_c}$ and so $c=c_{R_c}$. By the first point of \Cref{rem:impo} we know that $c_{R_c}$ is additive and we can conclude. \qedhere 
 \end{proof}
 
+Putting together \Cref{lem:clos} and \Cref{rem:unit} we get the following result.
 
-
-\begin{lemma}\label{lem:graph}
-	The following are equivalent for a simple graph $(V,R)$:
-	\begin{enumerate}
-		\item $R$ is reflexive; 
-		\item the component of the unit of the adjunction $F \dashv G$ at $(V, R)$ is an isomorphism.
-	\end{enumerate}
-\end{lemma}
-\begin{proof}
-	Let $G(F(V,R)$ be $(V, R_{c_R})$. As before we divide the proof of the two implications.
-	
-	\smallskip \noindent
-	$(1\Rightarrow 2).$  By \Cref{rem:unit} $R_{c_R} = \Delta_V\cup R$, but if $R$ is reflexive this entails $R_{c_R}=R$.
-	
-	\smallskip \noindent
-	$(2\Rightarrow 1).$ By \Cref{rem:unit} we know that the unit of $F\dashv G$ has $\id{V}$ has underlying function. The hypothesis that this arrow $(V, R)\to (V, R_{c_R})$ is an isomorphsim entails that $R_{c_R}\subseteq R$ and so $R$ must contain $\Delta_V$. \qedhere 
-\end{proof}
-
-Putting together \Cref{lem:clos,lem:graph} we get the following result.
-
-\begin{corollary}Let $I\colon \acs\to \cs$ and $J\colon \rsg \to \sg$ be the inclusion functors, then ther exists an equivalence of category $\hat{F}\colon \rsg\to \acs$, with quasi-inverse $\hat{G}\colon \acs \to \rsg$, fitting in the diagram below.
-	\[\xymatrix{ \acs\ar[d]_{I} \ar@{.>}[r]^-{\hat{G}}& \rsg \ar[d]^{J}\ar@{.>}[r]^-{\hat{F}}& \acs \ar[d]^{I}\\\cs\ar[r]_-{G} & \sg \ar[r]_-{F} & \cs}\]
+\begin{corollary}\label{cor:eq}Let $I\colon \acs\to \cs$ be the inclusion functors, then $G\circ I \colon \acs \to \sg$ is an equivalence of category whos quasi-inverse $\hat{F}\colon \sg\to \acs$ fits in the diagrams below.
+\[\xymatrix@C=10pt{ & \sg \ar[dr]^-{F} \ar[dl]_-{\hat{F}} \\ \acs \ar[rr]_{I} && \cs}\]	
 \end{corollary}
 
-\begin{example}
-	Starting with a topological space $(X, \mathcal{O})$, we can compute the value of $G(T(X, \mathcal{O}))$. By definition it is a simple graph $(X, R_{\mathcal{O}})$, where $R_ {\mathcal{O}}$ is defined as:
-	\[R_ {\mathcal{O}}:= \{(x,y)\mid y \in c_{\mathcal{O}}(\{x\})\}\]
-	Notice that $R_ {\mathcal{O}}$ is a preorder: 
+\subsection{Reflexivity and transitivity via closure operators}
+
+We have shown that closure spaces with additive closure operators correspond to simple graphs. Since simple graphs are sets equipped with relations, one can wonder if there are characterizations of interesting relations' properties in term of the associated closure spaces. In this section we are going to deal with reflexivity and transitivty, while we defer the discussion of symmetry to \Cref{sec:sym}.
+
+\subsubsection{Expansive closure operators}
+ Let us start with reflexivity which corresponds to \emph{expansive} closure operators. 
+ 
+\begin{definition}
+	Given a closure space $(X,c)$ and a simple graph $(V, R)$, we say that:
 	\begin{enumerate}
-		\item we know by the second point of \Cref{rem:impo} that $R_{\mathcal{O}}$ is reflexive;
-		\item suppose that $y\in c_{\mathcal{O}}(\{x\})$ and $z\in c_{\mathcal{O}}(\{y\})$, if $C$ is a closed set containing $x$, then $C$ must contain $y$ and so it must also contain $z$, proving that $z\in c_{\mathcal{O}}(\{x\})$.
+		\item $c$ is \emph{expansive} if $\id{X}\leq c$, we will denote by $\ecs$ the full subcategory of $\cs$ given by closure spaces $(X,c)$ with $c$ expansive;
+		\item $R$ is \emph{reflexive} if the diagonal $\Delta_V$ is contained in $R$, we will denote by $\rsg$ the full subcategory of $\sg$ given by simple graphs $(V, R)$ with $R$ reflexive.
 	\end{enumerate}
+	We will also denote by $\eacs$ the full subcategory of $\cs$ given by closure spaces equipped with expansive and additive closure operators.
+\end{definition}
+
+We are now going to show that $\eacs$ and $\rsg$ are equivalent. The key result is contained in the following lemma.
+
+\begin{lemma}\label{lem:expref} Let $(X,c)$ be a closure space and let $(X, R_c)$ be its image through the functor $G\colon \cs \to \sg$. Then the following are equivalent:
+	\begin{enumerate}
+		\item $c$ is expansive;
+		\item $R_c$ is reflexive.
+	\end{enumerate}
+\end{lemma}
+\begin{proof}	\smallskip \noindent
+	$(1\Rightarrow 2).$ Since $c$ is expansive, then for every $x\in X$ we have $\{x\} \subseteq c(\{x\})$ and so $(x,x)$ belongs to $R_c$. But this means that $\Delta_X \subseteq R_c$ as wanted.
 	
-	Summing up, $G(T(X, \mathcal{O}))$ is $X$ equipped with the so-called \emph{specialization preorder} \cite{hartshorne2013algebraic}. Notice that in some texts this name is attributed to the opposite of $R_{\mathcal{O}}$ \cite{goubault2013non}. 
+	\smallskip \noindent
+	$(2\Rightarrow 1).$  Let $A$ be a subset of $X$, since $R_c$ is reflexive then $a\in c(\{a\})$ for every $a\in A$, since $c$ is monotone this entails that $a\in c(A)$ and so $A\subseteq c(A)$. \qedhere 
+\end{proof}
+
+Since $G\circ F = \id{\sg}$ we get immediately the following.
+
+\begin{corollary} \label{cor:expref}
+	In a simple graph $(V, R)$, $R$ is reflexive if and only if $c_R$ is expansive, where $(V, c_R)$ is its image through the functor $F\colon \sg \to \cs$. 
+\end{corollary}
+
+\Cref{lem:expref} and \Cref{cor:expref}, together with \Cref{cor:eq}, give us at once the following.
+
+\begin{corollary}\label{cor:expeq}
+	Let $I_e\colon \eacs\to \acs$ and $J_r\colon \rsg\to \sg$ be the inclusion functors. There exists two functors $\check{G}\colon \eacs\to \rsg$ and $\check{F}\colon \rsg \to \eacs $ fitting in the diagram below.
+	\[\xymatrix@C=30pt{\eacs \ar[d]_{I_e} \ar@{.>}[r]^-{\check{G}} & \rsg \ar[d]_{J_r} \ar@{.>}[r]^-{\check{F}} & \eacs \ar[d]^{I_e}\\ \acs \ar[r]_-{G\circ I}& \sg \ar[r]_-{\hat{F}} & \acs}\]
+\end{corollary}
+
+\subsubsection{Idempotent closure operators} We now move on to the study of the closure spaces induced by transitive relations, and of their relationship with topological spaces.
+
+\begin{definition}
+	Given a closure space $(X,c)$ and a simple graph $(V, R)$, we say that:
+	\begin{enumerate}
+		\item $c$ is \emph{sub-idempotent} if $c\circ c \leq c$, we will denote by $\ics$ the full subcategory of $\cs$ given by closure spaces $(X,c)$ with $c$ idempotent;
+		\item $R$ is \emph{transitive} if whenever $(x,y)\in R$ and $(y,z)\in R$, then $(x,z)\in R$., we will denote by $\tsg$ the full subcategory of $\sg$ given by simple graphs $(V, R)$ with $R$ transitive.
+	\end{enumerate}
+	We will also denote by $\iacs$ the full subcategory of $\cs$ given by closure spaces equipped with sub-idempotent and additive closure operators.
+\end{definition}
+
+Our first aim is to prove an analog of \Cref{cor:expeq} by showing that $\iacs$ and $\tsg$ are equivalent.
+
+\begin{lemma}\label{lem:idetran} Let $(X,c)$ be a closure space and let $(X, R_c)$ be its image through the functor $G\colon \cs \to \sg$. If $c$ is sub-idempotent then $R_c$ is transitive. If, moreover, $c$ is additive then also the converse hold.
+\end{lemma}
+\begin{proof} Let $(x,y)$ and $(y,z)$ be elements of $R_c$. Thus $y\in c(\{x\})$ and $z\in c(\{y\})$. Since $\{y\}\subseteq c(\{x\})$ anc using idempotency we have that 
+	\begin{align*}c(\{y\})&\subseteq c(c(\{x\}))\\&=c(\{x\})
+	\end{align*}
+	proving that $z\in c(\{x\})$ as wanted.
+	
+	Suppose now that $c$ is additive and consider a subset $A$ of $X$.  Given an element $x$ $c(c(A))$, since $c$ is additive, there exists $y\in c(A)$ such that $y\in c(\{y\})$. Similarly, by additivity we also know that there is $a\in A$ such that $y\in c(\{a\})$. Thus we have $(a,y)$ and $(y,x)$ in $R_c$ and by transitivity we conclude that $(a,x)\in R_c$. But this means that $x\in c(A)$. \qedhere 
+\end{proof}
+\begin{example}\label{ex:cont1}
+	If $(X,c)$ is a closure space and $c$ is not additive, then it is not true that the transitivity of $R_c$ entails the idempotency of $c$. Consider the closure space of \Cref{ex:cont}. On the one hand, $R_c$ is transitive, indeed let $(x,y)$ and $(y,z)$ be in $R_c$, then
+	\begin{itemize}
+		\item suppose that $x$ is $\infty$, then $(x,z)$ belongs to $R_c$ because $\{\infty\}\times X\subseteq R_c$;
+		\item if $x\neq \infty$, then $y\in \mathbb{N}$ and so also $z$ cannot be $\infty$. We conclude that $(x,z)\in R_c$ because $(\mathbb{N}\times \mathbb{N})\subseteq R_c$.
+	\end{itemize}
+	
+	On the other hand, $c(\{a\})=\mathbb{N}$ while $c(\mathbb{N})=X$ and so $c$ is not sub-idempotent.
 \end{example}
+
+Using again the fact $G\circ F = \id{\sg}$ and \Cref{cor:eq} we get immediately the following two corollaries.
+
+\begin{corollary} \label{cor:idetran}
+	In a simple graph $(V, R)$, $R$ is transitive if and only if $c_R$ is idempotent, where $(V, c_R)$ is its image through the functor $F\colon \sg \to \cs$. 
+\end{corollary}
+
+\begin{corollary}\label{cor:ideeq}
+	Let $I_s\colon \iacs\to \acs$ and $J_t\colon \tsg\to \sg$ be the inclusion functors. There exists two functors $\bar{G}\colon \iacs\to \tsg$ and $\bar{F}\colon \rsg \to \iacs $ fitting in the diagram below.
+	\[\xymatrix@C=30pt{\iacs \ar[d]_{I_s} \ar@{.>}[r]^-{\bar{G}} & \tsg \ar[d]_{J_t} \ar@{.>}[r]^-{\bar{F}} & \iacs \ar[d]^{I_s}\\ \acs \ar[r]_-{G\circ I}& \sg \ar[r]_-{\hat{F}} & \acs}\]
+\end{corollary}
+
+
+\subsubsection{Preorders} We can put together the results contained in the previous sections to characterize \emph{preorders} in term of the associated closure spaces. 
+
+
+\begin{definition}
+	Given a closure space $(X,c)$ and a simple graph $(V, R)$, we say that:
+	\begin{enumerate}
+		\item $c$ is \emph{topological} if $c$ is expansive and sub-idempotent, we will denote by $\tcs$ the full subcategory of $\cs$ given by spaces equipped with a topological closure operator;
+		\item $R$ is a \emph{preorder} if $R$ is both reflexive and transitive, we will denote by $\pro$ the full subcategory of $\sg$ given by simple graph endowed with a preorder.
+	\end{enumerate}
+	We will also denote by $\tacs$ the full subcategory of $\cs$ given by closure spaces equipped with topological and additive closure operators.
+\end{definition}
+
+Our first aim is to prove an analog of \Cref{cor:expeq} by showing that $\iacs$ and $\tsg$ are equivalent.
+
+
+\begin{remark}
+	If $(X,c)$ is a closure space with $c$ topological, then $c$ is actually \emph{idempotent}, that is $c\circ c =c$. Indeed from $\id{X}\leq c$ it follows that $c\leq c\circ c$.
+\end{remark}
+
+\begin{lemma}\label{lem:pre} Let $(X,c)$ be a closure space and let $(X, R_c)$ be its image through the functor $G\colon \cs \to \sg$. If $c$ is topological then $R_c$ is a preorder. If, moreover, $c$ is additive then also the converse hold.
+\end{lemma}
+\begin{proof} This follows at once from \Cref{lem:expref,lem:idetran}. \qedhere 
+\end{proof}
+
+\begin{example}\label{ex:cont2} Let us consider again the closure space $(X,c)$ of \Cref{ex:cont,ex:cont1}. The relation $R_c$ is the union of $\mathbb{N}\times \mathbb{N}$ with $\{\infty\}\times X$ and so it is a preorder, but $c$ is not topological as it is not sub-idempotent.  
+\end{example}
+
+We can using again the fact $G\circ F = \id{\sg}$ together with \Cref{cor:eq,cor:expref,cor:expeq,cor:ideeq,cor:idetran} to get their analogs for preorders.
+
+\begin{corollary} \label{cor:pre}
+	In a simple graph $(V, R)$, $R$ is a preorder if and only if $c_R$ is topological, where $(V, c_R)$ is its image through the functor $F\colon \sg \to \cs$. 
+\end{corollary}
+
+\begin{corollary}\label{cor:preeq}
+	Let $I_t\colon \tacs\to \acs$ and $J_p\colon \pro\to \sg$ be the inclusion functors. There exists two functors $\tilde{G}\colon \tacs\to \tsg$ and $\tilde{F}\colon \pro \to \tacs $ fitting in the diagram below.
+	\[\xymatrix@C=30pt{\tacs \ar[d]_{I_t} \ar@{.>}[r]^-{\tilde{G}} & \pro \ar[d]_{J_p} \ar@{.>}[r]^-{\tilde{F}} & \tacs \ar[d]^{I_t}\\ \acs \ar[r]_-{G\circ I}& \sg \ar[r]_-{\hat{F}} & \acs}\]
+\end{corollary}
+
+We can sum up the results of this secion. Let $J_{p,r}\colon \pro \to \rsg$, $J_{p, t}\colon \pro \to \tsg$, $I_{t,e}\colon \tacs \to \eacs$ and $I_{t,s}\colon \tacs \to \iacs$ be the inclusion functors, then the following cubes commute and the vertical arrows are equivalences.
+
+\[\xymatrix@R=15pt@C=15pt{&\pro \ar[rr]^{J_{p,t}} \ar[dr]^{J_p} \ar[dl]_{J_{p,r}} \ar[dd]|\hole^(.7){\tilde{F}}&&\tsg \ar[dd]^{\bar{F}} \ar[dl]_{J_{t}} && \tacs \ar[dd]|\hole^(.7){\tilde{G}}\ar[rr]^{I_{t,s}}\ar[dr]^{I_t} \ar[dl]_{I_{p,e}} &&\iacs \ar[dl]_{I_s} \ar[dd]^{\bar{G}}\\ \rsg  \ar[rr]^(.3){J_{r}} \ar[dd]_{\check{F}}&& \sg \ar[dd]^(.3){\hat{F}} && \eacs \ar[dd]_{\check{G}} \ar[rr]^(.3){I_e} && \acs \ar[dd]^(.3){G\circ I}\\ &\tacs \ar[rr]^(.3){I_{t,s}}|(.49)\hole \ar[dr]^{I_t} \ar[dl]_{I_{p,e}} &&\iacs \ar[dl]_{I_s} && \pro \ar[rr]^(.3){J_{p,t}}|(.49)\hole \ar[dr]^{J_p} \ar[dl]_{J_{p,r}} &&\tsg  \ar[dl]_{J_{t}}\\ \eacs \ar[rr]_{I_e} && \acs  && \rsg  \ar[rr]_{J_{r}} && \sg} \]
+
+
+\subsection{Closure operators, topological spaces and preorders}
+
+We have already examined the relationship between closure spaces equppied with topological and additive closure operator. If we drop additivity we obtain a subcategory of $\cs$ which is equivalent to that of topological spaces. Under this equivalence, $\tacs$ corresponds to the subcategory of \emph{Alexandroff spaces}(\cite{alexandroff1937diskrete,arenas1999alexandroff,johnstone1982stone}). Moreover, exploiting the functor $F\dashv G$ proved in \Cref{lem:adj}, and the results of the previous sections we recover the well-known construction which assigns to a topological space its \emph{specialization preorder} \cite{goubault2013non,hartshorne2013algebraic}.
+
+We begin with the following proposition.
+
+\begin{proposition}\label{prop:top}
+
+Let $\topo$ be the category of topological spaces and continuous maps, there is a functor $T\colon \topo\to \cs$ which is the identity on arrows and sends a space $(X, \mathcal{O})$ to $(X, c_{\mathcal{O}})$, where
+\begin{align*}c_{\mathcal{O}}\colon (\mathcal{P}(X), \subseteq) &\to (\mathcal{P}(X), \subseteq)\\ A &\mapsto \inf(\{C\in \mathcal{P}(X) \mid C \text{ is closed and } A\subseteq C\})
+\end{align*}
+
+Moreover, $c_{\mathcal{O}}$ is topological.
+\end{proposition}
+\begin{proof}
+	For the first part of our claim, it is enough to show that $(X, c_{\mathcal{O}})$ is a closure spaces. Clearly $c_{\mathcal{O}}$ is monotone, let us show that it preserves finite unions.
+	\begin{itemize}
+		\item since $\emptyset$ is closed we immediately have that $c_{\mathcal{O}}(\emptyset)=\emptyset$;
+		\item take $A, B\in \mathcal{P}(X)$, since $c_{\mathcal{O}}$ is monotone then we know that 
+		\[c_{\mathcal{O}}(A)\cup c_{\mathcal{O}}(B) \subseteq c_{\mathcal{O}}(A\cup B)\]
+		Now, $c_{\mathcal{O}}(A)\cup c_{\mathcal{O}}(B)$, being the finite union of closed sets, is a closed set, and it contains $A\cup B$ and so other inclusion holds too. 
+	\end{itemize} 
+	
+	To see that $c_{\mathcal{O}}$ is topological notice that it is expansive by definition. Moreover, since the arbitrary intersection of closed sets is closed, $c_{\mathcal{O}}(A)$ is a closed set for every $A\in \mathcal{P}(X)$, entailing that $c_{\mathcal{O}}$ is idempotent. \qedhere 
+\end{proof}
+
+The functor just defined is a left adjoint.
+
+\begin{proposition}\label{prop:adj}
+The functor $T\colon \topo \to \cs$ has a right adjoint $H\colon \cs \to \topo$.
+\end{proposition}
+\begin{proof}
+	Given a closure space $(X,c)$ we can define:
+	\[\mathcal{O}_c:=\{A\subseteq X \mid A= X\smallsetminus c(B) \text{ for some $B$ in $\mathcal{P}(X)$}\}\]
+
+	It is easy to see that $\mathcal{O}_c$ is a topology on $X$:
+	\begin{itemize}
+		\item $\emptyset$ and $X$ belong to $\mathcal{O}_c$: indeed 
+		\[\emptyset = X\smallsetminus c(X) \qquad X = X \smallsetminus c(\emptyset)\] 
+		\item let $A_1$ and $A_2$ be elements in $\mathcal{O}_c$, by definition there are $B_1,B_2\in \mathcal{P}(X)$ such that 
+		\[A_1=X\smallsetminus c(B_1)\qquad A_2 = X \smallsetminus c(B_2)\]
+		therefore we have:
+		\begin{align*}
+			A_1\cap A_2 &= X\smallsetminus c(B_1) \cap X \smallsetminus c(B_2)\\&=
+			X \smallsetminus (c(B_1)\cup c(B_2))\\&= X \smallsetminus (c(B_1\cup B_2 ))
+		\end{align*}
+		proving that $A_1\cap A_2$ belongs to $\mathcal{O}_c$. 
+		\item  Let $\{A_i\}_{i\in I}$ be a family of elements of $\mathcal{O}_c$ and let also $\{B_i\}_{i\in I}$ be a family of elements such that
+		\[A_i= X\smallsetminus c(B_i)\]
+		Since $c$ is monotone and idempotent we have:
+		\begin{align*}
+			c(\bigcap_{i\in I} c(B_i)) &\subseteq \bigcap_{i\in I} c(c(B_i)) \\&= \bigcap_{i\in I}c(B_i)
+		\end{align*}
+		whilethe other inclusion is guaranteed by expansivity of $c$. Therefore we get:
+		\begin{align*}
+			\bigcup_{i\in I} A_i&=\bigcup_{i\in I} (X\smallsetminus c(B_i)) \\&= X \smallsetminus \bigcap_{i\in I} c(B_i)\\&= X \smallsetminus c(\bigcap_{i\in I} c(B_i)) 
+		\end{align*}
+		which proves that $\mathcal{O}_c$ is closed under arbitrary unions.
+	\end{itemize}
+	
+	Notice that, by definition, $C$ is closed in the topology $\mathcal{O}_c$ if and only if it lies in the image of $c$ and this entails immediately that $c_{\mathcal{O}_c}\leq c$. Thus $\id{X}$ defines an arrow $T(H(X,c))\to (X,c)$ in $\cs$. Let us show that it has the universal property of a counit.
+	
+Let $(Y, \mathcal{O})$ be a topological space, given a morphism $f\colon T(Y, \mathcal{O})\to (X,c)$, the arrow $f$ itself defines a continuous function $(Y, \mathcal{O})\to (X, \mathcal{O}_c)$. Consider a closed set $C\subseteq X$, then there exists $B\subseteq X$ such that $C= c(B)$. We want to show that $f^*(C) = c(f^*(B))$.
+
+On the one hand, if $D$ is a closed set contained in $Y$ which contains $f^*(B)$, then $f^*(C)\subseteq D$. 
+
+
+ Since $f$ is a morphism un $\cs$ we have
+\begin{align*}
+f^*(C)= f^*(c(B))
+\end{align*}
+
+
+ $A\in \mathcal{O}_c$
+\end{proof}
+
+
+
+
+\begin{proposition} The following are true:
+	\begin{enumerate}
+		\item a closure space $(X,c)$ is in the essential image of $T$ if and only if it is in $\tcs$.
+	\end{enumerate}
+\end{proposition}
+\begin{proof} \begin{enumerate}
+		\item 
+		\item  To conclude, it is thus enough to show that every $(X,c)$ in $\tcs$ is isomorphic to $(X, \mathcal{O})$ for some topological space $(X, \mathcal{O})$.  For the other inclusion, if $A\subseteq c(B)$ for some $B\in \mathcal{P}(X)$ then
+		\begin{align*}
+			c(A)&\subseteq c(c(B))\\&=c(B)
+		\end{align*}
+		implying that $c(A)\subseteq c_{\mathcal{O}_c}(A)$ as wanted.	\qedhere 
+	\end{enumerate}
+\end{proof}
+
+\begin{corollary}\label{cor:topeq}
+	contenuto...
+\end{corollary}
+
+
+
+We can sum up the results of this section in the following diagram.
+\[\xymatrix{mappa con tutti i funtori qu}\]
 
 \subsection{Derived spatial operators}
 
 This section is devoted to the study of the operators that can be obtained combining the closure operator of a given a closure space $(X,c)$ with the complete boolean algebra structure of $(\mathcal{P}(X), \subseteq)$.
 
-\subsubsection{The opposite closure operator} In the previous section we have examined the relationship between closure spaces and simple graphs. As every relation has an \emph{opposite}, so does every closure operator.
+\subsubsection{The opposite closure operators} In the previous section we have examined the relationship between closure spaces and simple graphs. As every relation has an \emph{opposite}, so does every closure operator.
 
 \begin{definition} Given a closure space $(X, c)$ we define the \emph{opposite of $c$} as:
 	\begin{align*}
@@ -617,6 +817,76 @@ As anticipated, the functor $(-)^\circ$ is linked to the construction which send
 
 \begin{remark} The composition  $G\circ (-)^\circ \circ F$ is not equal to $(-)^{\textsf{op}}$:  indeed every simple graph in the essential image of $G$ is reflexive, but $(V, R^{op})$ is reflexive if and only if $(V, R)$ is so.
 \end{remark}
+
+\subsubsection{The interior operator and symmetry}\label{sec:sym}
+\begin{remark}\label{rem:impo}
+	We can notice the following elementary but pivotal facts:
+	\begin{enumerate}
+		\item for every simple graph $(V, R)$, the closure operator $c_R$ of $F(V, c_R)$ is additive: indeed if $\{A_i\}_{i\in I}$ is a family of subsets of $V$ with union $A$ we have:
+		\begin{align*}
+			c_R(A) &= A \cup \bigcup_{a\in A} R_a \\&= A\cup \bigcup_{i\in I} \bigcup_{b_i\in A_i} R_{b_i} \\&=\bigcup_{i\in I} A_i \cup \bigcup_{i\in I} \bigcup_{b_i\in A_i} R_{b_i} \\&=  \bigcup_{i\in I}( A\cup \bigcup_{b_i\in A_i} R_{b_i} )\\&= \bigcup_{i\in I} c_R(A_i)
+		\end{align*}
+		\item for every closure space $(X, c)$, $G(X,c)$ is in $\rsg$: indeed if $G(X, c)=(X, R_c)$, then for every $x\in X$ we know that $\{x\}\subseteq c_R(\{x\})$ and so $(x,x)$ belongs to $R_c$.
+	\end{enumerate}
+\end{remark}
+
+\begin{lemma}\label{lem:clos}
+	The following are equivalent for a closure space $(X,c)$:
+	\begin{enumerate}
+		\item $c$ is additive; 
+		\item the component of the counit of the adjunction $F \dashv G$ at $(X, c)$ is an isomorphism.
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+	Let $F(G(X,c))$ be $(X, c_{R_c})$. We prove separately the two implications.
+	
+	\smallskip \noindent
+	$(1\Rightarrow 2).$ By the proof of \Cref{lem:adj} we know that, for every $A\subseteq X$ we have:
+	\[c_{R_c}(A) = \bigcup_{a\in A} c(\{a\})\]
+	and we can conclude by additivity.
+	
+	
+	\smallskip \noindent
+	$(2\Rightarrow 1).$ The counit $F(G(X,c))\to (X, c)$ has $\id{X}$ has underlying function. By hypothesis $\id{X}$ also defines a continuous morphism $(X,c)\to F(G(X,c))$ and this means that $c_{R_c}\leq c$. We already know that $c\leq c_{R_c}$ and so $c=c_{R_c}$. By the first point of \Cref{rem:impo} we know that $c_{R_c}$ is additive and we can conclude. \qedhere 
+\end{proof}
+
+
+
+\begin{lemma}\label{lem:graph}
+	The following are equivalent for a simple graph $(V,R)$:
+	\begin{enumerate}
+		\item $R$ is reflexive; 
+		\item the component of the unit of the adjunction $F \dashv G$ at $(V, R)$ is an isomorphism.
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+	Let $G(F(V,R)$ be $(V, R_{c_R})$. As before we divide the proof of the two implications.
+	
+	\smallskip \noindent
+	$(1\Rightarrow 2).$  By \Cref{rem:unit} $R_{c_R} = \Delta_V\cup R$, but if $R$ is reflexive this entails $R_{c_R}=R$.
+	
+	\smallskip \noindent
+	$(2\Rightarrow 1).$ By \Cref{rem:unit} we know that the unit of $F\dashv G$ has $\id{V}$ has underlying function. The hypothesis that this arrow $(V, R)\to (V, R_{c_R})$ is an isomorphsim entails that $R_{c_R}\subseteq R$ and so $R$ must contain $\Delta_V$. \qedhere 
+\end{proof}
+
+Putting together \Cref{lem:clos,lem:graph} we get the following result.
+
+\begin{corollary}Let $I\colon \acs\to \cs$ and $J\colon \rsg \to \sg$ be the inclusion functors, then ther exists an equivalence of category $\hat{F}\colon \rsg\to \acs$, with quasi-inverse $\hat{G}\colon \acs \to \rsg$, fitting in the diagram below.
+	\[\xymatrix{ \acs\ar[d]_{I} \ar@{.>}[r]^-{\hat{G}}& \rsg \ar[d]^{J}\ar@{.>}[r]^-{\hat{F}}& \acs \ar[d]^{I}\\\cs\ar[r]_-{G} & \sg \ar[r]_-{F} & \cs}\]
+\end{corollary}
+
+\begin{example}
+	Starting with a topological space $(X, \mathcal{O})$, we can compute the value of $G(T(X, \mathcal{O}))$. By definition it is a simple graph $(X, R_{\mathcal{O}})$, where $R_ {\mathcal{O}}$ is defined as:
+	\[R_ {\mathcal{O}}:= \{(x,y)\mid y \in c_{\mathcal{O}}(\{x\})\}\]
+	Notice that $R_ {\mathcal{O}}$ is a preorder: 
+	\begin{enumerate}
+		\item we know by the second point of \Cref{rem:impo} that $R_{\mathcal{O}}$ is reflexive;
+		\item suppose that $y\in c_{\mathcal{O}}(\{x\})$ and $z\in c_{\mathcal{O}}(\{y\})$, if $C$ is a closed set containing $x$, then $C$ must contain $y$ and so it must also contain $z$, proving that $z\in c_{\mathcal{O}}(\{x\})$.
+	\end{enumerate}
+	
+	Summing up, $G(T(X, \mathcal{O}))$ is $X$ equipped with the so-called \emph{specialization preorder} \cite{hartshorne2013algebraic}. Notice that in some texts this name is attributed to the opposite of $R_{\mathcal{O}}$ \cite{goubault2013non}. 
+\end{example}
+
 
 \subsubsection{The reachability operators}
 

@@ -89,6 +89,7 @@
 \newcommand{\rsg}{\catname{Refl}}
 \newcommand{\tsg}{\catname{Trans}}
 \newcommand{\pro}{\catname{Pre}}
+\newcommand{\cl}{\mathsf{cl}}
 \newcommand{\al}{\catname{Ale}}
 \newcommand{\tacs}{\catname{taCS}}
 \newcommand{\co}[1]{\{\abs{#1}\}}
@@ -475,8 +476,8 @@ The notion of additivity provides the wanted characterization.
 
 Putting together \Cref{lem:clos} and \Cref{rem:unit} we get the following result.
 
-\begin{corollary}\label{cor:eq}Let $I\colon \acs\to \cs$ be the inclusion functors, then $G\circ I \colon \acs \to \sg$ is an equivalence of category whos quasi-inverse $\hat{F}\colon \sg\to \acs$ fits in the diagrams below.
-\[\xymatrix@C=10pt{ & \sg \ar[dr]^-{F} \ar[dl]_-{\hat{F}} \\ \acs \ar[rr]_{I} && \cs}\]	
+\begin{corollary}\label{cor:eq}Let $I\colon \acs\to \cs$ be the inclusion functors, then $G\circ I \colon \acs \to \sg$ is an equivalence of category whose quasi-inverse $\hat{F}\colon \sg\to \acs$ fits in the diagrams below.
+\[\xymatrix@C=10pt{ & \sg \ar[dr]^-{F} \ar@{.>}[dl]_-{\hat{F}} \\ \acs \ar[rr]_{I} && \cs}\]	
 \end{corollary}
 
 \subsection{Reflexivity and transitivity via closure operators}
@@ -601,7 +602,7 @@ We can using again the fact $G\circ F = \id{\sg}$ together with \Cref{cor:eq,cor
 \end{corollary}
 
 \begin{corollary}\label{cor:preeq}
-	Let $I_t\colon \tacs\to \acs$ and $J_p\colon \pro\to \sg$ be the inclusion functors. There exists two functors $\tilde{G}\colon \tacs\to \tsg$ and $\tilde{F}\colon \pro \to \tacs $ fitting in the diagram below.
+	Let $I_t\colon \tacs\to \acs$ and $J_p\colon \pro\to \sg$ be the inclusion functors. There exist two functors $\tilde{G}\colon \tacs\to \tsg$ and $\tilde{F}\colon \pro \to \tacs $ fitting in the diagram below and which are one the quasi-inverse of the other.
 	\[\xymatrix@C=30pt{\tacs \ar[d]_{I_t} \ar@{.>}[r]^-{\tilde{G}} & \pro \ar[d]_{J_p} \ar@{.>}[r]^-{\tilde{F}} & \tacs \ar[d]^{I_t}\\ \acs \ar[r]_-{G\circ I}& \sg \ar[r]_-{\hat{F}} & \acs}\]
 \end{corollary}
 
@@ -617,7 +618,6 @@ We have already examined the relationship between closure spaces equppied with t
 We begin with the following proposition.
 
 \begin{proposition}\label{prop:top}
-
 Let $\topo$ be the category of topological spaces and continuous maps, there is a functor $T\colon \topo\to \cs$ which is the identity on arrows and sends a space $(X, \mathcal{O})$ to $(X, c_{\mathcal{O}})$, where
 \begin{align*}c_{\mathcal{O}}\colon (\mathcal{P}(X), \subseteq) &\to (\mathcal{P}(X), \subseteq)\\ A &\mapsto \inf(\{C\in \mathcal{P}(X) \mid C \text{ is closed and } A\subseteq C\})
 \end{align*}
@@ -636,82 +636,167 @@ Moreover, $c_{\mathcal{O}}$ is topological.
 	To see that $c_{\mathcal{O}}$ is topological notice that it is expansive by definition. Moreover, since the arbitrary intersection of closed sets is closed, $c_{\mathcal{O}}(A)$ is a closed set for every $A\in \mathcal{P}(X)$, entailing that $c_{\mathcal{O}}$ is idempotent. \qedhere 
 \end{proof}
 
-The functor just defined is a left adjoint.
+The functor just defined is a right adjoint. To prove this we need a preliminary definition.
+
+\begin{definition}
+	Let $(X,c)$ be a closure space, a subset $A$ of $X$ is \emph{closed} if $c(A) \subseteq A$. We will denote by $\cl(X,c)$ the set of closed subset of $X$.
+\end{definition}
+
+\begin{remark}\label{rem:cl}
+	Consider a closure space $(X,c)$ and $A\subseteq X$:
+	\begin{itemize}
+		\item if $c$ is expansive, then $A$ is closed if and only if $c(A) = A$;
+		\item if $c$ is topological, then $A$ is closed if and only if it is in the image of $c\colon \mathcal{P}(X)\to \mathcal{P}(X)$.
+	\end{itemize}
+\end{remark}
+
+\begin{example}\label{ex:cl}
+	Let $(X, \mathcal{O})$ be a topological space, then $\cl(X, c_{\mathcal{O}})$ is exactly the set of closed for the topology $\mathcal{O}$.
+\end{example}
+
+\begin{lemma}\label{lem:closed}
+	Let $(X,c)$ be a closure space, then:
+	\begin{enumerate}
+		\item $\cl(X,c)$ is closed under finite unions;
+		\item $\cl(X,c)$ is closed under arbitrary intersections:
+	\end{enumerate}
+In particular, $\emptyset$ and $X$ belong to $\cl(X,c)$.
+\end{lemma}
+\begin{proof}
+	\begin{enumerate}
+		\item  By definition of closure space we have $\emptyset = c(\emptyset)$ and so $\emptyset$ is closed. To conclude, it is enough to show that $\cl(X,c)$ is closed under binary unions. Let $K_1$ and $K_2$ be closed sets, then $c(K_1\cup K_2) = c(K_1)\cup c(K_2)$, but $c(K_1)\subseteq K_1$ and $c(K_2)\subseteq K_2$ and we are done. 
+		\item Let $\{K_i\}_{i\in I}$ be a family of closed sets, then clearly the intersecon of $\{K_i\}_{i\in I}$ is contained in every $K_i$ and so:
+		\begin{align*}c(\bigcap_{i\in I} K_i) &\subseteq c(K_i) \\&\subseteq K_i
+		\end{align*} 
+		and this entails that $c(K_i)$ is in $\cl(X,c)$. \qedhere  
+	\end{enumerate}
+\end{proof}
+\begin{corollary}\label{cor:top}
+	For every closure space $(X,c)$, there exists a topology $\mathcal{O}_c$ on $X$ given by:
+	\[\mathcal{O}_c:=\{A\subseteq X \mid A= X\smallsetminus K \text{ for some $K$ in $\cl(X,c)$}\}\]
+\end{corollary}
+
+\begin{example}\label{rem:obv}
+	Every closure space $(X,c)$ has at least two closed sets: $X$ and $\emptyset$.
+\end{example}
+
 
 \begin{proposition}\label{prop:adj}
-The functor $T\colon \topo \to \cs$ has a right adjoint $H\colon \cs \to \topo$.
+The functor $T\colon \topo \to \cs$ has a left adjoint $H\colon \cs \to \topo$.
 \end{proposition}
 \begin{proof}
-	Given a closure space $(X,c)$ we can define:
-	\[\mathcal{O}_c:=\{A\subseteq X \mid A= X\smallsetminus c(B) \text{ for some $B$ in $\mathcal{P}(X)$}\}\]
-
-	It is easy to see that $\mathcal{O}_c$ is a topology on $X$:
-	\begin{itemize}
-		\item $\emptyset$ and $X$ belong to $\mathcal{O}_c$: indeed 
-		\[\emptyset = X\smallsetminus c(X) \qquad X = X \smallsetminus c(\emptyset)\] 
-		\item let $A_1$ and $A_2$ be elements in $\mathcal{O}_c$, by definition there are $B_1,B_2\in \mathcal{P}(X)$ such that 
-		\[A_1=X\smallsetminus c(B_1)\qquad A_2 = X \smallsetminus c(B_2)\]
-		therefore we have:
-		\begin{align*}
-			A_1\cap A_2 &= X\smallsetminus c(B_1) \cap X \smallsetminus c(B_2)\\&=
-			X \smallsetminus (c(B_1)\cup c(B_2))\\&= X \smallsetminus (c(B_1\cup B_2 ))
-		\end{align*}
-		proving that $A_1\cap A_2$ belongs to $\mathcal{O}_c$. 
-		\item  Let $\{A_i\}_{i\in I}$ be a family of elements of $\mathcal{O}_c$ and let also $\{B_i\}_{i\in I}$ be a family of elements such that
-		\[A_i= X\smallsetminus c(B_i)\]
-		Since $c$ is monotone and idempotent we have:
-		\begin{align*}
-			c(\bigcap_{i\in I} c(B_i)) &\subseteq \bigcap_{i\in I} c(c(B_i)) \\&= \bigcap_{i\in I}c(B_i)
-		\end{align*}
-		whilethe other inclusion is guaranteed by expansivity of $c$. Therefore we get:
-		\begin{align*}
-			\bigcup_{i\in I} A_i&=\bigcup_{i\in I} (X\smallsetminus c(B_i)) \\&= X \smallsetminus \bigcap_{i\in I} c(B_i)\\&= X \smallsetminus c(\bigcap_{i\in I} c(B_i)) 
-		\end{align*}
-		which proves that $\mathcal{O}_c$ is closed under arbitrary unions.
-	\end{itemize}
+	Given a closure space $(X,c)$, by \Cref{cor:top} we know that $(X, \mathcal{O}_c)$ is a topological space and that $K\subset X$ is closed in $\mathcal{O}_c$ if and only if it belongs to $\cl(X, c)$. For every $A\subseteq X$, let $K$ be an element of $\cl(X,c)$ such that $A\subseteq K$, then
+	\begin{align*}
+		c(A)&\subseteq c(K)\\&\subseteq K
+	\end{align*}
+	and so $c(A)\subseteq c_{\mathcal{O}_c}(A)$, that is $c\leq c_{\mathcal{O}_c}$. Thus $\id{X}$ defines an arrow $(X,c) \to T(H(X,c))$ in $\cs$. Let us show that it has the universal property of a unit. 
 	
-	Notice that, by definition, $C$ is closed in the topology $\mathcal{O}_c$ if and only if it lies in the image of $c$ and this entails immediately that $c_{\mathcal{O}_c}\leq c$. Thus $\id{X}$ defines an arrow $T(H(X,c))\to (X,c)$ in $\cs$. Let us show that it has the universal property of a counit.
-	
-Let $(Y, \mathcal{O})$ be a topological space, given a morphism $f\colon T(Y, \mathcal{O})\to (X,c)$, the arrow $f$ itself defines a continuous function $(Y, \mathcal{O})\to (X, \mathcal{O}_c)$. Consider a closed set $C\subseteq X$, then there exists $B\subseteq X$ such that $C= c(B)$. We want to show that $f^*(C) = c(f^*(B))$.
-
-On the one hand, if $D$ is a closed set contained in $Y$ which contains $f^*(B)$, then $f^*(C)\subseteq D$. 
-
-
- Since $f$ is a morphism un $\cs$ we have
+Let $f$ be a morphsim $(X,c)\to (T, \mathcal{O})$ for some topological space $(Y, \mathcal{O})$. The arrow $f$ itself defines a continuous function $(X, \mathcal{O}_c)\to (Y, \mathcal{O})$. To see this, let $C\subseteq Y$ be a closed set for $\mathcal{O}$, then
 \begin{align*}
-f^*(C)= f^*(c(B))
+	c(f^*(C))&\subseteq f^*(c(C))\\&=f^*(C)
 \end{align*}
-
-
- $A\in \mathcal{O}_c$
+and so $f^*(C)$, being in $\cl(X,c)$, is closed in $(X, \mathcal{O}_c)$. \qedhere 
 \end{proof}
 
+\begin{remark}\label{rem:topcoun}
+	We can compute $H\circ T$. Given a topological space $(X, \mathcal{O})$, $H(T(X, \mathcal{O}))$ is endowed with the topology $\mathcal{O}_{c_{\mathcal{O}}}$ for which the set of closed is $\cl(X, c_{\mathcal{O}})$ which, by \Cref{ex:cl} is exactly the set of closed for $\mathcal{O}$. Thus $\mathcal{O}_{c_{\mathcal{O}}}$ coincides with $\mathcal{O}$ and this, in turn, entails that the counit $H\circ T\to \id{\topo}$ is given by the identity.
+\end{remark}
 
-
-
-\begin{proposition} The following are true:
+\begin{proposition}\label{prop:topequi} Let $(X,c)$ be a closure space. The following are equivalent:
 	\begin{enumerate}
-		\item a closure space $(X,c)$ is in the essential image of $T$ if and only if it is in $\tcs$.
+		\item $c$ is topological;
+		\item the component of the unit of the adjunction $T\dashv H$ at $(X,c)$ is an isomorphism.
 	\end{enumerate}
 \end{proposition}
-\begin{proof} \begin{enumerate}
-		\item 
-		\item  To conclude, it is thus enough to show that every $(X,c)$ in $\tcs$ is isomorphic to $(X, \mathcal{O})$ for some topological space $(X, \mathcal{O})$.  For the other inclusion, if $A\subseteq c(B)$ for some $B\in \mathcal{P}(X)$ then
-		\begin{align*}
-			c(A)&\subseteq c(c(B))\\&=c(B)
-		\end{align*}
-		implying that $c(A)\subseteq c_{\mathcal{O}_c}(A)$ as wanted.	\qedhere 
-	\end{enumerate}
+\begin{proof} $(1\Rightarrow 2).$ By the proof of \Cref{prop:adj} we know that $c\leq c_{\mathcal{O}_c}$, thus to conclude it is enough to show the other inequality. 
+	
+Let $A$ be a subset of $X$, by \Cref{rem:cl} we know that $c(A)$ belongs to $\cl(X,c)$ and so, by \Cref{cor:top} it is closed for $\mathcal{O}_c$. Since $c$ is topological $A\subseteq c(A)$ and so $c_{\mathcal{O}_c}(A)$ is contained in $c(A)$ as wanted.
+
+	\smallskip \noindent
+	$(2\Rightarrow 1).$ We know that the unit of $H\dashv T$ has the identitiy as underlying function of every component, entailing $c\leq c_{\mathcal{O}_c}$. By \Cref{prop:top} we know that $c_{\mathcal{O}_c}$ is topological and so to conclude is again enough to prove the other inequality, but this follows immediately since the hypothesis entails that $\id{X}$ defines a morphism $(X, c_{\mathcal{O}_c})\to (X, c)$.	\qedhere 
 \end{proof}
 
 \begin{corollary}\label{cor:topeq}
-	contenuto...
+	Let $K_t\colon \tcs\to \cs$ be the inclusion functor, then $H\circ K_t\colon \tcs \to \topo$ is an  equivalence of categories whose quasi-inverse $T_e \colon \topo\to \tcs$ fits in the diagrams below.
+	\[\xymatrix@C=10pt{& \topo \ar[dr]^{T} \ar@{.>}[dl]_{T_{e}} \\ \tcs \ar[rr]_{K_t} && \cs}\]
 \end{corollary}
 
+As a next step we put together the previous result with the adjunction $F\dashv G$ relating closure spaces and simple graph.
+
+\begin{corollary}
+	The functor $H\circ F\circ J_p\colon \pro \to \topo$ has a right adjoint $P\colon \topo \to \pro$ fitting in the diagram below.
+	\[\xymatrix@C=30pt{ \topo \ar[r]^{T} \ar@{.>}[d]_{P}& \cs \ar[d]^{G}\\ \pro \ar[r]_-{J_p}& \sg }\]
+\end{corollary}
+\begin{proof}
+	We already know that $F\dashv G$ and $H\dashv T$, since adjunctions compose we also have that $H\circ F \dashv G\circ T$. 
+	Now, $J_p\colon \pro \to \sg$ is full and so to conclude it is enough to show that $G(T(X, \mathcal{O}))$ is a preorder for every topological space $(X, \mathcal{O})$, but this follows from \Cref{cor:pre}. \qedhere
+\end{proof}
+
+\begin{remark} The preorder $P(X, \mathcal{O})$ associated to a topological space is called the \emph{specialization preorder} of $(X, \mathcal{O})$ \cite{hartshorne2013algebraic}. Notice that in some texts this name is attributed to the opposite of this preorder \cite{goubault2013non}. 
+\end{remark}
+
+We are now ready to characterize the fixed point of the adjunction $H\circ F \circ J_p \dashv P$.
+
+\begin{definition}
+	A topological space $(X, \mathcal{O})$ is \emph{alexandroff} if $\mathcal{O}$ is closed in $\mathcal{P}(X)$ under arbitrary intersections. We will denote by $\al$ the full subcategory of $\topo$ given by alexandroff spaces.
+\end{definition}
 
 
-We can sum up the results of this section in the following diagram.
-\[\xymatrix{mappa con tutti i funtori qu}\]
+\begin{proposition}\label{prop:ale}
+	Given a topological space $(X, \mathcal{O})$, the following are equivalent:
+	\begin{enumerate}
+		\item $(X, \mathcal{O})$ is an object of $\al$;
+		\item the arbitrary union of closed sets is closed;
+		\item $c_{\mathcal{O}}$ is additive.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+	$(1 \Rightarrow 2).$ Let $\{C_i\}_{i\in I}$ be a family of closed sets, then there exists a family $\{U_i\}_{i\in I}$ such that, for every $i\in I$
+	\[C_i = X\smallsetminus U_i\]
+	But then
+	\begin{align*}
+		X\smallsetminus \bigcup_{i\in I} C_i &= \bigcap_{i\in I} (X\smallsetminus C_i)\\&= \bigcap_{i\in I} U_i
+	\end{align*}
+	which, by hypothesis is open and this proves the claim.
+	
+	\smallskip \noindent
+	$(2 \Rightarrow 3).$ Let $\{A_i\}_{i\in I}$ be a family of subsets of $X$. Since $c_{\mathcal{O}}$ is monotone we know that
+	\[\bigcup_{i\in I} c_{\mathcal{O}}(A_i)\subseteq c_{\mathcal{O}}(\bigcup_{i\in I} A_i)\]
+	By hypothesis $\bigcup_{i\in I} c_{\mathcal{O}}(A_i)$ is closed and contains $\bigcup_{i\in I} A_i$, thus the other inclusion holds as well.
+	
+	\smallskip \noindent
+	$(3 \Rightarrow 1).$
+	Let $\{U_i\}_{i\in I}$ be a family of opens. Then there is a family $\{C_i\}_{i\in I}$ of closed sets such that 
+	\[U_i = X\smallsetminus C_i\]
+	for every $i\in I$. Thus:
+	\begin{align*}\bigcap_{i\in I} U_i &= \bigcap_{i\in I} (X\smallsetminus C_i)\\&= \bigcup_{i\in I} C_i\\&= \bigcup_{i\in I} c_{\mathcal{O}}(C_i) \\&= c_{\mathcal{O}}(\bigcup_{i\in I} C_i) 
+	\end{align*}
+	which proves that $\bigcap_{i\in I} U_i$ is open. \qedhere 
+\end{proof}
+
+
+\begin{corollary}\label{cor:ale1}
+	Let $A\colon \al \to \topo$ and $I'_{t}\colon \tacs \to \cs$ the inclusion functors. There exist two functors $\tilde{T}\colon \al \to \tacs$ and $\tilde{H}\colon \tacs \to \al$ fitting in the diagram below and which are one the quasi-inverse of the other.
+		\[\xymatrix@C=30pt{\tacs \ar[d]_{I'_t} \ar@{.>}[r]^-{\tilde{H}} & \al \ar[d]_{A} \ar@{.>}[r]^-{\tilde{T}} & \tacs \ar[d]^{I'_t}\\ \cs \ar[r]_-{H}& \topo \ar[r]_-{T} & \cs}\]
+\end{corollary}
+
+\begin{corollary}\label{cor:ale}
+	$P\circ A$ is an equivalence of categories whose quasi-inverse $B_p\colon \pro \to \al$ fits in the diagram below.
+	\[\xymatrix{\pro \ar[r]^-{J_p} \ar@{.>}[d]_{B_p}& \sg \ar[r]^-{F} &\cs \ar[d]^{H}\\ \al \ar[rr]_{A} && \topo}\]
+\end{corollary}
+\begin{proof}
+	By \Cref{cor:preeq} we know that there exists an equivalence of categories $\tilde{F}\colon \pro \to \tacs$ with quasi-inverse $\tilde{G}\colon \tacs \to \pro$. Computing we have:
+	\begin{align*}
+		J_p \circ \tilde{G}\circ \tilde{T}&= G\circ I\circ I_t \circ \tilde{T} \\&= G\circ I'_t \circ \tilde{T} \\&= G\circ T \circ A \\&= J_p\circ P \circ A
+	\end{align*} 
+	and so $\tilde{G}\circ \tilde{T} = P\circ A$. This entails that $P\circ A$ is an equivalence of categories with quasi-inverse given by $\tilde{H}\circ \tilde{F}$. But then:
+	\begin{align*}
+		A\circ \tilde{H}\circ \tilde{F} &= H\circ I'_t\circ \tilde{F}\\&=
+		H\circ I \circ I_t\circ \tilde{F} \\&= H\circ I \circ \hat{F} \circ J_p \\&=H\circ F \circ J_p
+	\end{align*}
+	and we can conclude. \qedhere 
+\end{proof}
+
 
 \subsection{Derived spatial operators}
 
